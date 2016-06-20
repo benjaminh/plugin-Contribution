@@ -1,8 +1,8 @@
-<?php 
+<?php
     $itemTypeOptions = get_db()->getTable('ContributionType')->getPossibleItemTypes();
     $itemTypeOptions = array('' => 'Select an Item Type') + $itemTypeOptions;
 ?>
-<form method='post'>  
+<form method='post'>
 <section class='seven columns alpha'>
 <?php if($action == 'add'): ?>
     <div class="field">
@@ -42,30 +42,33 @@
                <?php echo $this->formSelect('file_permissions', $contribution_type->file_permissions, array(), ContributionType::getPossibleFilePermissions()); ?>
             </div>
         </div>
-     </div>  
-    
+     </div>
 
-    
+
+
     <div id="element-list" class="seven columns alpha">
         <ul id="contribution-type-elements" class="sortable">
         <?php
         foreach ($contributionTypeElements as $contributionElement):
             if ($contributionElement):
         ?>
-        
+
             <li class="element">
                 <div class="sortable-item">
-                <strong><?php echo html_escape($contributionElement->Element->name); ?></strong><span class='prompt'><?php echo __('Prompt'); ?></span>
+                <strong><?php echo html_escape($contributionElement->Element->name); ?></strong>
+                <span class='prompt'><?php echo __('Prompt'); ?></span>
                 <?php echo $this->formText("elements[$contributionElement->id][prompt]" , $contributionElement->prompt); ?>
                 <span class='long-text'><?php echo __('Multiple rows'); ?></span>
                 <?php echo $this->formCheckbox("elements[$contributionElement->id][long_text]", null, array('checked'=>$contributionElement->long_text));    ?>
                 <?php echo $this->formHidden("elements[$contributionElement->id][order]", $contributionElement->order, array('size'=>2, 'class' => 'element-order')); ?>
+                <span class='repeatable'><?php echo __('Repeatable field'); ?></span>
+                <?php echo $this->formCheckbox("elements[$contributionElement->id][repeatable]", null, array('checked'=>$contributionElement->repeatable));    ?>
                 <?php if (is_allowed('Contribution_Types', 'delete-element')): ?>
                 <a id="return-element-link-<?php echo html_escape($contributionElement->id); ?>" href="" class="undo-delete"><?php echo __('Undo'); ?></a>
                 <a id="remove-element-link-<?php echo html_escape($contributionElement->id); ?>" href="" class="delete-element"><?php echo __('Remove'); ?></a>
                 <?php endif; ?>
                 </div>
-                
+
                 <div class="drawer-contents">
                     <div class="element-description"><?php echo html_escape($contributionElement->Element->description); ?></div>
                 </div>
@@ -96,7 +99,7 @@
                 ?>
                 <?php endif; ?>
             <?php endif; ?>
-        <?php endforeach; // end for each $elementInfos ?> 
+        <?php endforeach; // end for each $elementInfos ?>
             <li>
                 <div class="add-new">
                     <?php echo __('Add Element'); ?>
@@ -112,7 +115,7 @@
 
 <section class='three columns omega'>
     <div id='save' class='panel'>
-            
+
             <input type="submit" class="big green button" value="<?php echo __('Save Changes');?>" id="submit" name="submit">
             <?php if($contribution_type->exists()): ?>
             <?php echo link_to($contribution_type, 'delete-confirm', __('Delete'), array('class' => 'big red button delete-confirm')); ?>

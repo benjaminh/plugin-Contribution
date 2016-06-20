@@ -123,6 +123,7 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
             `prompt` VARCHAR(255) NOT NULL,
             `order` INT UNSIGNED NOT NULL,
             `long_text` BOOLEAN DEFAULT TRUE,
+            `repeatable` BOOLEAN DEFAULT FALSE,
             PRIMARY KEY (`id`),
             UNIQUE KEY `type_id_element_id` (`type_id`, `element_id`),
             KEY `order` (`order`)
@@ -191,7 +192,7 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
             $this->hookInstall();
 
         }
-        
+
             if (version_compare($oldVersion, '3.0', '<')) {
             if(!is_writable(CONTRIBUTION_PLUGIN_DIR . "/upgrade_files")) {
                 throw new Omeka_Plugin_Installer_Exception("'upgrade_files' directory must be writable by the web server");
@@ -226,7 +227,7 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
 
             $this->_db->query($sql);
         }
-        
+
         if (version_compare($oldVersion, '3.0.2', '<')) {
             //fix some previous bad upgrades
             //need to check if contributor_posting was properly changed to anonymous
@@ -352,20 +353,20 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
         );
         return $apiResources;
     }
-    
+
     public function filterApiImportOmekaAdapters($adapters, $args)
     {
         if (strpos($args['endpointUri'], 'omeka.net') !== false) {
-            $contributedItemAdapter = 
+            $contributedItemAdapter =
                 new ApiImport_ResponseAdapter_Omeka_GenericAdapter(null, $args['endpointUri'], 'ContributionContributedItem');
             $contributedItemAdapter->setResourceProperties(array('item' => 'Item'));
             $adapters['contributions'] = $contributedItemAdapter;
-            
-            $contributionTypeAdapter = 
+
+            $contributionTypeAdapter =
                 new ApiImport_ResponseAdapter_Omeka_GenericAdapter(null, $args['endpointUri'], 'ContributionType');
             $contributionTypeAdapter->setResourceProperties(array('item_type' => 'ItemType'));
             $adapters['contribution_types'] = $contributionTypeAdapter;
-    
+
             $contributionTypeElementsAdapter =
                 new ApiImport_ResponseAdapter_Omeka_GenericAdapter(null, $args['endpointUri'], 'ContributionTypeElement');
             $contributionTypeElementsAdapter->setResourceProperties(
@@ -376,22 +377,22 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
                     );
             $adapters['contribution_type_elements'] = $contributionTypeElementsAdapter;
         } else {
-            $contributionContributorsAdapter = 
+            $contributionContributorsAdapter =
                 new ApiImport_ResponseAdapter_OmekaNet_ContributorsAdapter(
                     null, $args['endpointUri'], 'User'
                     );
             $adapters['contribution_contributors'] = $contributionContributorsAdapter;
 
-            $contributedItemAdapter = 
+            $contributedItemAdapter =
                 new ApiImport_ResponseAdapter_OmekaNet_ContributedItemsAdapter(
                         null, $args['endpointUri'], 'ContributionContributedItem'
                     );
             $adapters['contribution_contributed_items'] = $contributedItemAdapter;
-            $typesAdapter = 
+            $typesAdapter =
                 new ApiImport_ResponseAdapter_Omeka_GenericAdapter(null, $args['endpointUri'], 'ContributionType');
             $typesAdapter->setResourceProperties(array('item_type' => 'ItemType'));
             $adapters['contribution_types'] = $typesAdapter;
-            $typeElementsAdapter = 
+            $typeElementsAdapter =
                 new ApiImport_ResponseAdapter_Omeka_GenericAdapter(null, $args['endpointUri'], 'ContributionTypeElement');
             $typeElementsAdapter->setResourceProperties(
                     array('type' => 'ContributionType',
@@ -568,6 +569,7 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
             $textElement->prompt = 'Title';
             $textElement->order = 1;
             $textElement->long_text = false;
+            $textElement->repeatable = false;
             $textElement->save();
             $textElement = new ContributionTypeElement;
             $textElement->type_id = $storyType->id;
@@ -576,6 +578,7 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
             $textElement->prompt = 'Story Text';
             $textElement->order = 2;
             $textElement->long_text = true;
+            $textElement->repeatable = false;
             $textElement->save();
         }
         $imageItemType = $itemTypeTable->findByName('Still Image');
@@ -593,6 +596,7 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
             $descriptionElement->prompt = 'Image Description';
             $descriptionElement->order = 1;
             $descriptionElement->long_text = true;
+            $descriptionElement->repeatable = false;
             $descriptionElement->save();
         }
     }
@@ -774,7 +778,7 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
         if ($contributionElement->long_text == 0) {
             $components['input'] = $view->formText($args['input_name_stem'] . '[text]', $args['value']);
         }
-        $components['form_controls'] = null;
+        //$components['form_controls'] = null; // Remove the "cancel input" button
         $components['html_checkbox'] = null;
         return $components;
     }
@@ -792,7 +796,9 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
         $contributionElement = $this->_db->getTable('ContributionTypeElement')->findByElementAndType($element, $type);
         $prompt = $contributionElement->prompt;
         $components['label'] = '<label>' . $prompt . '</label>';
-        $components['add_input'] = null;
+        if ($contributionElement->repeatable == 0) {
+          $components['add_input'] = null; // Remove the 'add input' button
+        }
         return $components;
     }
 }

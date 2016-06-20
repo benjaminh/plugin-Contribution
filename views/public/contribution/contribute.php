@@ -13,6 +13,11 @@ if(!$contributionPath) {
 }
 queue_css_file('form');
 
+//load bootstrap files
+queue_css_file('bootstrap-iso');
+queue_js_file('bootstrap.min');
+?>
+<?php
 //load user profiles js and css if needed
 if(get_option('contribution_user_profile_type') && plugin_is_active('UserProfiles') ) {
     queue_js_file('admin-globals');
@@ -21,7 +26,7 @@ if(get_option('contribution_user_profile_type') && plugin_is_active('UserProfile
     queue_css_string("input.add-element {display: block}");
 }
 
-$head = array('title' => 'Contribute',
+$head = array('title' => 'Participez au projet',
               'bodyclass' => 'contribution');
 echo head($head); ?>
 <script type="text/javascript">
@@ -30,16 +35,22 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
 // ]]>
 </script>
 
-<div id="primary">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
+<div id="primary" class='bootstrap-iso'>
 <?php echo flash(); ?>
-    
+
     <h1><?php echo $head['title']; ?></h1>
 
     <?php if(!get_option('contribution_simple') && !$user = current_user()) :?>
         <?php $session = new Zend_Session_Namespace;
               $session->redirect = absolute_url();
         ?>
-        <p>You must <a href='<?php echo url('guest-user/user/register'); ?>'>create an account</a> or <a href='<?php echo url('guest-user/user/login'); ?>'>log in</a> before contributing. You can still leave your identity to site visitors anonymous.</p>        
+        <p>You must <a href='<?php echo url('guest-user/user/register'); ?>'>create an account</a> or <a href='<?php echo url('guest-user/user/login'); ?>'>log in</a> before contributing. You can still leave your identity to site visitors anonymous.</p>
     <?php else: ?>
         <form method="post" action="" enctype="multipart/form-data">
             <fieldset id="contribution-item-metadata">
@@ -82,3 +93,14 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
     <?php endif; ?>
 </div>
 <?php echo foot();
+?>
+<script type="text/javascript">
+  // NOTE differs from original code
+  // Add some style to element with bootstrap
+  (function ($) {
+    var select = $('#contribution-type');
+    $("#contribution-type option[selected='selected']").remove();
+    select.addClass('selectpicker');
+    select.selectpicker({style: 'btn-primary', title: 'Choisir dans la liste'});
+  })(jQuery);
+</script>

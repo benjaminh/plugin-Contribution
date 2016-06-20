@@ -1,7 +1,7 @@
 # Translation for the Contribution plugin for Omeka.
 # Copyright (C) 2011 Roy Rosenzweig Center for History and New Media
 # This file is distributed under the same license as the Omeka package.
-# 
+#
 # Translators:
 # Stéphane Loret Sdj <stephane.loret@univ-nantes.fr>, 2015
 # symac <wikitipiac@laposte.net>, 2014
@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: Omeka\n"
 "Report-Msgid-Bugs-To: http://github.com/omeka/plugin-Contribution/issues\n"
 "POT-Creation-Date: 2012-01-09 21:49-0500\n"
-"PO-Revision-Date: 2015-03-17 16:39+0000\n"
+"PO-Revision-Date: 2016-05-12 15:40+0100\n"
 "Last-Translator: Stéphane Loret Sdj <stephane.loret@univ-nantes.fr>\n"
-"Language-Team: French (http://www.transifex.com/projects/p/omeka/language/fr/)\n"
+"Language-Team: French (http://www.transifex.com/projects/p/omeka/language/"
+"fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: models/ContributionType.php:101
 msgid "Allowed"
@@ -107,9 +109,12 @@ msgstr "Alias de la contribution."
 #: controllers/SettingsController.php:79
 msgid ""
 "Relative path from the Omeka root to the desired location for the "
-"contribution form. If left blank, the default path will be named "
-"&#8220;contribution.&#8221;"
-msgstr "Chemin relatif depuis la racine d'Omeka vers la localisation du formulaire de contribution. Si cette zone est laissée vide, le chemin sera nommé &#8220;contribution.&#8221;."
+"contribution form. If left blank, the default path will be named &#8220;"
+"contribution.&#8221;"
+msgstr ""
+"Chemin relatif depuis la racine d'Omeka vers la localisation du formulaire "
+"de contribution. Si cette zone est laissée vide, le chemin sera nommé &#8220;"
+"contribution.&#8221;."
 
 #: controllers/SettingsController.php:84
 msgid "Contribution Confirmation Email"
@@ -120,7 +125,10 @@ msgid ""
 "An email message will be sent to each contributor from this address "
 "confirming that they submitted a contribution to this website. Leave blank "
 "if you do not want an email sent."
-msgstr "Un courriel de confirmation sera envoyé à chaque contributeur pour leur confirmer leur contribution. Laissez cette zone libre pour ne pas envoyer de courriel."
+msgstr ""
+"Un courriel de confirmation sera envoyé à chaque contributeur pour leur "
+"confirmer leur contribution. Laissez cette zone libre pour ne pas envoyer de "
+"courriel."
 
 #: controllers/SettingsController.php:90
 msgid "New Contribution Notification Emails"
@@ -131,7 +139,9 @@ msgid ""
 "An email message will be sent to each address here whenever a new item is "
 "contributed. Leave blank if you do not want anyone to be alerted of "
 "contributions by email."
-msgstr "Un courriel sera envoyé à chaque adresse à chaque nouvelle contribution. Laissez cette zone libre pour ne pas envoyer de courriel."
+msgstr ""
+"Un courriel sera envoyé à chaque adresse à chaque nouvelle contribution. "
+"Laissez cette zone libre pour ne pas envoyer de courriel."
 
 #: controllers/SettingsController.php:96
 msgid "Text of Terms of Service"
@@ -150,9 +160,15 @@ msgid ""
 "This will require an email address from contributors, and create a guest "
 "user from that information. If those users want to use the account, they "
 "will have to request a new password for the account. If you want to collect "
-"additional information about contributors, you cannot use the simple option."
-" See documentation for details. "
-msgstr "Cela nécessitera une adresse mail pour les contributeurs, et créera un utilisateur invité à partir de ces informations. Si ces utilisateurs veulent utiliser le compte, ils devront demander un nouveau mot de passe pour le compte. Si vous voulez récupérer des informations supplémentaires sur les contributeurs, vous ne pouvez pas utiliser l'option \"simple\". Reportez vous à la documentation pour les détails."
+"additional information about contributors, you cannot use the simple option. "
+"See documentation for details. "
+msgstr ""
+"Cela nécessitera une adresse mail pour les contributeurs, et créera un "
+"utilisateur invité à partir de ces informations. Si ces utilisateurs veulent "
+"utiliser le compte, ils devront demander un nouveau mot de passe pour le "
+"compte. Si vous voulez récupérer des informations supplémentaires sur les "
+"contributeurs, vous ne pouvez pas utiliser l'option \"simple\". Reportez "
+"vous à la documentation pour les détails."
 
 #: controllers/SettingsController.php:109
 msgid "Email text to send to contributors"
@@ -160,11 +176,16 @@ msgstr "Texte du courriel à envoyer aux contributeurs"
 
 #: controllers/SettingsController.php:110
 msgid ""
-"Email text to send to contributors when they submit an item. A link to their"
-" contribution will be appended. If using the 'Simple' option, we recommend "
+"Email text to send to contributors when they submit an item. A link to their "
+"contribution will be appended. If using the 'Simple' option, we recommend "
 "that you notify contributors that a guest user account has been created for "
 "them, and what they gain by confirming their account."
-msgstr "Texte du courriel à envoyer aux contributeurs lorsqu'ils envoient un contenu. Un lien vers leur contribution sera ajouté à fin du message. Si l'option \"simple\" est utilisée, nous vous recommandons de notifier les contributeurs qu'un compte invité a été créé pour eux, et en expliquant les avantages qu'ils gagneront en l'utilisant."
+msgstr ""
+"Texte du courriel à envoyer aux contributeurs lorsqu'ils envoient un "
+"contenu. Un lien vers leur contribution sera ajouté à fin du message. Si "
+"l'option \"simple\" est utilisée, nous vous recommandons de notifier les "
+"contributeurs qu'un compte invité a été créé pour eux, et en expliquant les "
+"avantages qu'ils gagneront en l'utilisant."
 
 #: controllers/SettingsController.php:115
 msgid "Do not put contributions in any collection"
@@ -178,7 +199,9 @@ msgstr "Collection de la contribution"
 msgid ""
 "The collection to which contributions will be added. Changes here will only "
 "affect new contributions."
-msgstr "La collection dans laquelle seront ajoutées les contributions. Les changement effectués n'affecteront que les nouveaux contributeurs."
+msgstr ""
+"La collection dans laquelle seront ajoutées les contributions. Les "
+"changement effectués n'affecteront que les nouveaux contributeurs."
 
 #: controllers/SettingsController.php:124
 msgid "No default type"
@@ -212,7 +235,8 @@ msgstr "Anonyme"
 
 #: models/Mixin/ContributionOrder.php:101
 msgid "Cannot add a child to a record that does not exist yet!"
-msgstr "Ne peut pas ajouter un enfant à un enregistrement qui n'existe pas encore !"
+msgstr ""
+"Ne peut pas ajouter un enfant à un enregistrement qui n'existe pas encore !"
 
 #: models/Mixin/ContributionOrder.php:105
 #, php-format
@@ -268,12 +292,16 @@ msgid ""
 "A basic contribution form is installed and ready to ask users to submit a "
 "Story or Image type, and to include their name and email address. If you "
 "want to modify the form, follow the steps below."
-msgstr "Un formulaire de contribution basique est déjà installé et est prêt à répondre aux soumissions des utilisateurs pour un contenu de type Histoire ou Image, et pour inclure leur nom et leur adresse mail. Si vous souhaitez modifier le formulaire, suivez les étapes suivantes."
+msgstr ""
+"Un formulaire de contribution basique est déjà installé et est prêt à "
+"répondre aux soumissions des utilisateurs pour un contenu de type Histoire "
+"ou Image, et pour inclure leur nom et leur adresse mail. Si vous souhaitez "
+"modifier le formulaire, suivez les étapes suivantes."
 
 #: views/admin/index/index.php:21
 msgid ""
-"While an account exists for all contributors, they can make any contribution"
-" anonymously. Only the admin and super roles can see the full information."
+"While an account exists for all contributors, they can make any contribution "
+"anonymously. Only the admin and super roles can see the full information."
 msgstr ""
 
 #: views/admin/index/index.php:22
@@ -292,7 +320,9 @@ msgstr "1. Définir les informations de l'utilisateur invité :"
 msgid ""
 "To make repeat contributions easier, a reusable 'Guest User' account is "
 "created for contributors."
-msgstr "Pour faire des contributions répétées facilement, un compte réutilisable 'Utilisateur invité' est créé pour les contributeurs."
+msgstr ""
+"Pour faire des contributions répétées facilement, un compte réutilisable "
+"'Utilisateur invité' est créé pour les contributeurs."
 
 #: views/admin/index/index.php:26
 msgid "Configure Guest Users"
@@ -330,7 +360,9 @@ msgstr "2. Modifier le formulaire de contribution :"
 msgid ""
 "Choose item types you wish visitors to share, and customize the fields they "
 "should use, in %s"
-msgstr "Choisir les types de contenu que vous voulez partager avec les visiteurs, et personnaliser les champs qu'ils devront utiliser, in %s"
+msgstr ""
+"Choisir les types de contenu que vous voulez partager avec les visiteurs, et "
+"personnaliser les champs qu'ils devront utiliser, in %s"
 
 #: views/admin/index/index.php:39
 msgid "user profiles type"
@@ -341,12 +373,14 @@ msgstr "Type de profils utilisateurs"
 msgid ""
 "Set up profile information you would like from your contributors by setting "
 "up a %s "
-msgstr "Définir les informations que vous souhaitez obtenir de vos contributeurs en mettant en place un %s "
+msgstr ""
+"Définir les informations que vous souhaitez obtenir de vos contributeurs en "
+"mettant en place un %s "
 
 #: views/admin/index/index.php:41
 msgid ""
-"The optional User Profiles plugin lets you set up additional information you"
-" would like to ask from your contributors. To use those features, please "
+"The optional User Profiles plugin lets you set up additional information you "
+"would like to ask from your contributors. To use those features, please "
 "install that, then return here for additional guidance."
 msgstr ""
 
@@ -365,9 +399,11 @@ msgstr "Mettre en place les conditions de contribution au site."
 
 #: views/admin/index/index.php:49
 msgid ""
-"Set up an auto-generated email to send to all contributors after they submit"
-" their contribution."
-msgstr "Définir un message auto-généré à envoyer à tous les contributeurs après dépôt de leur contribution"
+"Set up an auto-generated email to send to all contributors after they submit "
+"their contribution."
+msgstr ""
+"Définir un message auto-généré à envoyer à tous les contributeurs après "
+"dépôt de leur contribution"
 
 #: views/admin/index/index.php:50
 msgid ""
@@ -377,7 +413,9 @@ msgstr "Décider s'il faut utiliser les options \"Simple\". Cela requiert "
 
 #: views/admin/index/index.php:51
 msgid "Specify a collection for new contributed items."
-msgstr "Spécifier une collection pour les nouveaux enregistrements issus des contributions."
+msgstr ""
+"Spécifier une collection pour les nouveaux enregistrements issus des "
+"contributions."
 
 #: views/admin/index/index.php:54
 #, php-format
@@ -437,7 +475,8 @@ msgstr "Il n'y a pas encore de contribution. "
 #: views/admin/items/browse.php:157
 #, php-format
 msgid "The query searched %d contributions and returned no results."
-msgstr "Cette requête a parcouru %d contributions et n'a retourné aucun résultat."
+msgstr ""
+"Cette requête a parcouru %d contributions et n'a retourné aucun résultat."
 
 #: views/admin/items/browse.php:158
 msgid "See all contributions."
@@ -466,13 +505,17 @@ msgstr "Téléchargement de fichier"
 
 #: views/admin/types/form.php:13
 msgid "The Item Type, from your site's list of types, you would like to use."
-msgstr "Le type d'objet, depuis la liste de types de votre site, que vous souhaitez utiliser."
+msgstr ""
+"Le type d'objet, depuis la liste de types de votre site, que vous souhaitez "
+"utiliser."
 
 #: views/admin/types/form.php:28
 msgid ""
 "The label you would like to use for this contribution type. If blank, the "
 "Item Type name will be used."
-msgstr "Le nom du champ que vous souhaitez utiliser pour ce type de contribution. Si vide, alors le nom du type de contenu sera utilisé."
+msgstr ""
+"Le nom du champ que vous souhaitez utiliser pour ce type de contribution. Si "
+"vide, alors le nom du type de contenu sera utilisé."
 
 #: views/admin/types/form.php:37
 msgid "Allow File Upload Via Form"
@@ -483,7 +526,11 @@ msgid ""
 "Enable or disable file uploads through the public contribution form. If set "
 "to &#8220;Required,&#8220; users must add a file to their contribution when "
 "selecting this item type."
-msgstr "Activer ou désactiver les téléchargements de fichier par le formulaire public de contribution. &#8220;Requis,&#8220; les utilisateurs doivent alors ajouter un fichier à leur contribution quand ce type de contenu est sélectionné."
+msgstr ""
+"Activer ou désactiver les téléchargements de fichier par le formulaire "
+"public de contribution. &#8220;Requis,&#8220; les utilisateurs doivent alors "
+"ajouter un fichier à leur contribution quand ce type de contenu est "
+"sélectionné."
 
 #: views/admin/types/form.php:42
 #, php-format
@@ -550,9 +597,11 @@ msgstr "Parcourir l'archive"
 #: views/public/contribution/thankyou.php:4
 #, php-format
 msgid ""
-"Your contribution will show up in the archive once an administrator approves"
-" it. Meanwhile, feel free to %s or %s ."
-msgstr "Votre contribution apparaîtra dans l'archive quand un administrateur l'aura approuvée. Dans l'attente, n'hésitez pas à %s ou %s."
+"Your contribution will show up in the archive once an administrator approves "
+"it. Meanwhile, feel free to %s or %s ."
+msgstr ""
+"Votre contribution apparaîtra dans l'archive quand un administrateur l'aura "
+"approuvée. Dans l'attente, n'hésitez pas à %s ou %s."
 
 #: views/public/contribution/thankyou.php:7
 msgid "this page"
@@ -565,6 +614,9 @@ msgid ""
 "that is ready for you. Visit %s, and request a new password for the email "
 "you used"
 msgstr ""
+"Si vous souhaitez consulter votre contribution, vous pouvez utiliser le "
+"compte qui vient de vous être créé. Rendez vous sur la page %s et faites une "
+"demande de mot de passe pour l'adresse e-mail que vous avez renseigné."
 
 #: views/public/contribution/type-form.php:29
 msgid "Upload a file (Optional)"

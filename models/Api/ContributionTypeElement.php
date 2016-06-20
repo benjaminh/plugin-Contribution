@@ -9,7 +9,8 @@ class Api_ContributionTypeElement extends Omeka_Record_Api_AbstractRecordAdapter
                 'url'       => self::getResourceUrl("/contribution_type_elements/{$typeElement->id}"),
                 'prompt'    => $typeElement->prompt,
                 'order'     => (int) $typeElement->order,
-                'long_text' => (bool) $typeElement->long_text
+                'long_text' => (bool) $typeElement->long_text,
+                'repeatable'=> (bool) $typeElement->repeatable
                 );
         $representation['element'] = array(
                 'id'       => $typeElement->element_id,
@@ -23,10 +24,10 @@ class Api_ContributionTypeElement extends Omeka_Record_Api_AbstractRecordAdapter
                 );
         return $representation;
     }
-    
+
     public function getResourceId()
     {
         return 'Contribution_TypeElement';
     }
-    
+
 }

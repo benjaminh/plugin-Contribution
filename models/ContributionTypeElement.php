@@ -20,7 +20,8 @@ class ContributionTypeElement extends Omeka_Record_AbstractRecord
     public $prompt;
     public $order;
     public $long_text;
-    
+    public $repeatable;
+
     protected $_related = array('ContributionType' => 'getType',
                                 'Element'          => 'getElement');
 
@@ -40,7 +41,7 @@ class ContributionTypeElement extends Omeka_Record_AbstractRecord
     {
         return $this->_db->getTable('ContributionType')->find($this->type_id);
     }
-    
+
     /**
      * Get the Element associated with this type element.
      *
