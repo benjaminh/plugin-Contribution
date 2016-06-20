@@ -45,3 +45,9 @@ div.contribution-userprofile.exists {
 .panel-body {
 	background-color: #fff;
 }
+#ui-id-1 {
+	z-index: 99999;
+}
+#mapdiv {
+	height: 300px;
+}

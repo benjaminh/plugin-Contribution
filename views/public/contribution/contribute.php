@@ -16,6 +16,12 @@ queue_css_file('form');
 //load bootstrap files
 queue_css_file('bootstrap-iso');
 queue_js_file('bootstrap.min');
+
+//load jeoquery library
+queue_js_file('jeoquery');
+queue_js_file('geocoder.min');
+queue_js_file('leaflet');
+queue_css_file('leaflet');
 ?>
 <?php
 //load user profiles js and css if needed
