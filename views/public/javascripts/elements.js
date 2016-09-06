@@ -66,6 +66,7 @@ Omeka.Elements = {};
      * @param {string} recordId Current record ID.
      */
     var map = null;
+    var marker;
     Omeka.Elements.makeElementControls = function (element, elementFormPartialUrl, recordType, recordId) {
         var addSelector = '.add-element';
         var removeSelector = '.remove-element';
@@ -88,6 +89,8 @@ Omeka.Elements = {};
 
 
           map = new L.map('mapdiv');
+          map.getSize();
+          map.invalidateSize();
           // create the tile layer with correct attribution
 
           var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -96,19 +99,34 @@ Omeka.Elements = {};
 
           // start the map in South-East England
           map.addLayer(osm);
-          map.setView([0, 0], 0, {
-            reset: true
+          map.setView([47.212277, -1.5386562], 11, {
+            reset: true,
+            animate: true
           });
           map.invalidateSize();
+
+          // NOTE Leaflet seems to have an issue with unexpected behaviour during the first loading of the map. Here is a working hack for my case
+          $('#collapseOne').one('mouseenter' , function( event ) {
+            map.setView([46.52863469527167,2.43896484375], 6, {
+              reset: true,
+              animate: true
+            });
+            map.invalidateSize();
+          });
         }
 
         // Geocode function
         function geocode(address)
         {
+          if (typeof marker !== 'undefined')
+          {
+            map.removeLayer(marker);
+          }
           var openStreetMapGeocoder = GeocoderJS.createGeocoder('openstreetmap');
           openStreetMapGeocoder.geocode(address, function(result) {
-            L.marker([result[0]['latitude'], result[0]['longitude']]).addTo(map);
             var latlng = new L.LatLng(result[0]['latitude'], result[0]['longitude']);
+            marker = new L.marker([result[0]['latitude'], result[0]['longitude']]);
+            map.addLayer(marker);
             map.setView(latlng, 11, {
               reset: true,
               animate: true
@@ -126,6 +144,90 @@ Omeka.Elements = {};
                 removeButtons.show();
             } else {
                 removeButtons.hide();
+            }
+
+            if ($(this).attr('id') == "element-257") {
+              console.log("element 257");
+              html = `
+              <select name="type-select" id='type-select'>
+                <optgroup label="Séjour familial">
+                  <option value="club">Club de vacances</option>
+                  <option value="camping">Camping</option>
+                  <option value="famille">Dans la famille</option>
+                </optgroup>
+                <optgroup label='Séjour organisé'>
+                  <option value="org-club">Club et village de vacances</option>
+                  <option value="org-camping">Camping</option>
+                  <option value="org-classe">Classe découverte</option>
+                  <option value="org-colonie">Colonie</option>
+                  <option value="org-accueil">Famille d'accueil</option>
+                </optgroup>
+              </select>
+              `;
+              $("#Elements-257-0-text").hide();
+              $(this).find('div.input').append(html);
+              $('#type-select').on('change', function(event) {
+                var selected = $("#type-select").val();
+                var group = '';
+                if ( selected.startsWith('org-') ) {
+                  group = 'Séjour organisé'
+                }
+                else {
+                  group = "Séjour familial";
+                }
+                $("#Elements-257-0-text").val(group + ', ' + $('#type-select option:selected').text());
+              });
+            }
+            else if ($(this).attr('id') == "element-264") {
+              html = `
+              <select name="status-select" id='status-select'>
+                <option value="part">Participant</option>
+                <optgroup label='Organisateur'>
+                  <option value="org-ben">Bénévole</option>
+                  <option value="org-sal">Salarié</option>
+                </optgroup>
+                <optgroup label='Encadrant sur place'>
+                  <option value="enc-ben">Bénévole</option>
+                  <option value="enc-sal">Salarié</option>
+                </optgroup>
+                <option value="fin">Financeur/Mécène</option>
+              </select>
+              `;
+              $("#Elements-264-0-text").hide();
+              $(this).find('div.input').append(html);
+              $('#status-select').on('change', function(event) {
+                var selected = $("#status-select").val();
+                var group = '';
+                if ( selected.startsWith('org-') ) {
+                  group = 'Organisateur';
+                }
+                else if ( selected.startsWith('enc-') ) {
+                  group = 'Encadrant sur place';
+                }
+                if (group != '') {
+                  $("#Elements-264-0-text").val(group + ', ' + $('#status-select option:selected').text());
+                }
+                else {
+                  $("#Elements-264-0-text").val($('#status-select option:selected').text());
+                }
+              });
+            }
+            else if ($(this).attr('id') == "element-261") {
+              // Date picker TODO avoid HARDCODING
+              $( "#Elements-261-0-text" ).datepicker();
+            }
+            else if ($(this).attr('id') == "element-200") {
+              // Hide the license field. Populate it with cc Chooser
+              $(this).hide();
+            }
+            else if ($(this).attr('id') == "element-199") {
+              // Hide the Access Rights element. Populate with license chooser info
+              $(this).hide();
+            }
+            else if ($(this).attr('id') == "element-50") {
+              // Hide the Access Rights element. Populate with license chooser info
+              $(this).hide();
+              $(this).val( + recordId);
             }
             // Add form-control class for bootstrap
             // NOTE Had to be done with jQuery because Omeka creates only input elements and no "button" : check FormSubmit.php in Zend/View/Helper
@@ -154,25 +256,72 @@ Omeka.Elements = {};
                 newElem.prepend('<span class="glyphicon btn-glyphicon glyphicon-minus img-circle text-warning"></span>');
 
               }
-              // Add geonames API query using jeoquery
-              else if (element.attr('id') == "Elements-265-0-text") {
-                var jeoelement = $('#Elements-265-0-text');
-                jeoelement.addClass("ui-autocomplete-input input-large");
-                // Initialization
-                // jeoQuery autocomplete
-                jeoquery.defaultData.userName = 'enjeux';
-                jeoelement.jeoCityAutoComplete();
+              // Add geonames API query using jeoquery or google maps api
+              // TODO AVOID HARDCODING
+              else if (element.attr('id') == "Elements-266-0-text") {
+
+                // USING GOOGLE MAPS API
+                var placeSearch, autocomplete;
+                var componentForm = {
+                  locality: 'long_name',
+                  administrative_area_level_1: 'short_name',
+                  country: 'long_name',
+                  postal_code: 'short_name'
+                };
+                var mapping = {
+                  locality: 'Elements-268-0-text',
+                  administrative_area_level_1: 'Elements-269-0-text',
+                  country: 'Elements-270-0-text',
+                  postal_code: 'Elements-267-0-text'
+                };
+                // TODO AVOID HARDCODING
+                $('#Elements-266-0-text').attr("placeholder", "Saisissez un début d'adresse");
+                // Create the autocomplete object, restricting the search to geographical
+                // location types.
+                autocomplete = new google.maps.places.Autocomplete(
+                // TODO AVOID HARDCODING
+                    /** @type {!HTMLInputElement} */(document.getElementById('Elements-266-0-text')),
+                    {types: ['geocode']});
+                // When the user selects an address from the dropdown, populate the address
+                // fields in the form.
+                autocomplete.addListener('place_changed', fillInAddress);
+
+                // [START region_fillform]
+                function fillInAddress() {
+                  // Get the place details from the autocomplete object.
+                  var place = autocomplete.getPlace();
+
+                  for (var component in componentForm) {
+                    mappedID = mapping[component];
+                    document.getElementById(mappedID).value = '';
+                    document.getElementById(mappedID).disabled = false;
+                  }
+
+                  // Get each component of the address from the place details
+                  // and fill the corresponding field on the form.
+                  for (var i = 0; i < place.address_components.length; i++) {
+                    var addressType = place.address_components[i].types[0];
+                    if (componentForm[addressType]) {
+                      var val = place.address_components[i][componentForm[addressType]];
+                      mappedID = mapping[addressType];
+                      document.getElementById(mappedID).value = val;
+                    }
+                  }
+                  // Place a marker on the map
+                  // TODO AVOID HARDCODING
+                  geocode(document.getElementById('Elements-266-0-text').value);
+                }
                 var elementExists = document.getElementById("mapdiv");
                 if ( !elementExists )
                 {
-                  loadMapDiv("#element-265");
+                  // TODO AVOID HARDCODING
+                  loadMapDiv("#element-270");
                 }
-                jeoelement.on("autocompleteselect", function(event, ui) {geocode(ui.item.value)});
               }
               else if (element.is('select')) {
                 element.addClass('selectpicker');
                 element.children("option[value='']").remove();
-                element.selectpicker({style: 'btn-success', title: 'Choisir ci-dessous'});
+                element.selectpicker({style: 'btn-primary', title: 'Sélectionner dans la liste'});
               }
               else if (!element.hasClass("use-html-checkbox") && !element.hasClass("fileinput")) {
                 element.addClass("form-control");

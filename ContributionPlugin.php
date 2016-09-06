@@ -497,10 +497,13 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
     {
 
         $htmlBase = $this->_adminBaseInfo($args);
-        echo "<div class='panel'>";
-        echo "<h4>" . __("Contribution") . "</h4>";
-        echo $htmlBase;
-        echo "</div>";
+
+        if ($htmlBase) {
+          echo "<div class='panel'>";
+          echo "<h4>" . __("Contribution") . "</h4>";
+          echo $htmlBase;
+          echo "</div>";
+        }
     }
 
     public function hookAdminItemsBrowseDetailedEach($args)

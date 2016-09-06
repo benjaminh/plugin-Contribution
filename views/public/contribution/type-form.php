@@ -23,7 +23,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
   <?php if (!$type): ?>
   <p><?php echo __('Vous devez choisir un type de contenu pour continuer.'); ?></p>
   <?php else: ?>
-  <h2><?php echo __('Proposer un/une %s', $type->display_name); ?></h2>
+  <h2><?php echo __('Déposer une %s', $type->display_name); ?></h2>
 
   <?php
   if ($type->isFileRequired()):
