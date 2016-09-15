@@ -20,10 +20,25 @@ jQuery(document).bind('omeka:elementformload', function (event) {
 <div class="container-fluid">
   <!-- Bootstrap code inside container div -->
 
-  <?php if (!$type): ?>
-  <p><?php echo __('Vous devez choisir un type de contenu pour continuer.'); ?></p>
-  <?php else: ?>
-  <h2><?php echo __('Déposer une %s', $type->display_name); ?></h2>
+  <?php
+  if (!$type) {
+    echo '<p>';
+    echo __('Vous devez choisir un type de contenu pour continuer.');
+    echo '</p>';
+  }
+  else {
+    if ($type->id == 3) {
+      echo '<h4>';
+      echo __('Déposer une %s', $type->display_name, 'en remplissant le formulaire ci-dessous');
+      echo '</h4>';
+    }
+    else if ($type->id == 4) {
+    echo '<h4>';
+    echo __('Déposer un %s', $type->display_name, 'en remplissant le formulaire ci-dessous');
+    echo '</h4>';
+    }
+
+  ?>
 
   <?php
   if ($type->isFileRequired()):
@@ -44,11 +59,13 @@ jQuery(document).bind('omeka:elementformload', function (event) {
   <div id="accordion" class="panel-group" aria-multiselectable="true" role="tablist">
     <div class="panel panel-default">
       <div id="headingOne" class="panel-heading" role="tab">
-        <h4 class="panel-title">
-          <a aria-controls="collapseOne" aria-expanded="true" href="#collapseOne" data-parent="#accordion" data-toggle="collapse">Informations sur le contenu</a>
+        <!--<h4 class="panel-title">
+           <a aria-controls="collapseOne" aria-expanded="true" href="#collapseOne" data-parent="#accordion" data-toggle="collapse">Informations sur le contenu</a>
         </h4>
+      -->
       </div>
-      <div id="collapseOne" class="panel-collapse collapse" aria-labelledby="headingOne" role="tabpanel">
+      <!-- <div id="collapseOne" class="panel-collapse collapse" aria-labelledby="headingOne" role="tabpanel"> -->
+      <div id="collapseOne" aria-labelledby="headingOne" role="tabpanel">
         <div class="panel-body">
           <div class="row">
             <div class="form-group col-md-12">
@@ -138,7 +155,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
   // on a type-by-type basis).
   fire_plugin_hook('contribution_type_form', array('type'=>$type, 'view'=>$this));
   ?>
-  <?php endif; ?>
+  <?php } ?>
 </div>
 <!-- End of bootstrap container
 <

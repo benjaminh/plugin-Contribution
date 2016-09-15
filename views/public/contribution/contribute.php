@@ -16,6 +16,9 @@ queue_css_file('form');
 //load bootstrap files
 queue_css_file('bootstrap-iso');
 queue_js_file('bootstrap.min');
+//queue_css_file('bootstrap-datepicker.min');
+//queue_js_file('bootstrap-datepicker.min');
+//queue_js_file('locales/bootstrap-datepicker.fr.min');
 
 //load jeoquery library
 queue_js_file('jeoquery');
@@ -44,8 +47,12 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<script type="text/javascript"
+        src="https://raw.githubusercontent.com/jquery/jquery-ui/master/ui/i18n/datepicker-fr.js">
+</script>
 
 <div id="primary" class='bootstrap-iso'>
 <?php echo flash(); ?>
@@ -69,13 +76,13 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
                     IN OUR CASE, THERE IS NO CHOICE BUT ONE
                   */
                   ?>
-                  <!-- <div class="inputs"> -->
+                  <div class="inputs">
                       <!-- <label for="contribution-type"><?php //echo __("What type of item do you want to contribute?"); ?></label> -->
                       <?php $options = get_table_options('ContributionType' ); ?>
                       <?php $typeId = isset($type) ? $type->id : '' ; ?>
                       <?php echo $this->formSelect( 'contribution_type', $typeId, array('multiple' => false, 'id' => 'contribution-type') , $options); ?>
                       <input type="submit" name="submit-type" id="submit-type" value="Select" />
-                  <!-- </div> -->
+                  </div>
 
                   <?php
                   /* END OF MODIFIED SECTION */
@@ -121,13 +128,24 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
   // NOTE differs from original code
   // Add some style to element with bootstrap
   (function ($) {
+
     var select = $('#form-submit');
     select.addClass("btn btn-success");
 
     var contributionType = $('#contribution-type');
+    contributionType.children("option[value='']").remove();
+    contributionType.selectpicker({style: 'btn-primary', title: 'Sélectionner dans la liste'});
     // Uncomment the 2 lines below if you have only 1 choice possible and set the value accordingly
-    contributionType.hide();
-    $('#contribution-type option[value=3]').prop('selected', true).change();
+    //contributionType.hide();
+    //$('#contribution-type option[value=3]').prop('selected', true).change();
+
+    // Handle date picker
+    /*
+    $('input:radio[name="optDate"]').on('change', function (event) {
+      // Update DC element with date
+      $( "#Elements-261-0-text" ).val();
+    });
+    */
 
     // Display Creative Commons Chooser when selecting 'public contribution'
     var publicCheckbox = $('#contribution-public');

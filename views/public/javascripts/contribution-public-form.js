@@ -11,16 +11,16 @@ function enableContributionAjaxForm(url) {
 
         /* NEW VERSION WITH ONLY ONE ELEMENT TYPE */
         // Elements that should be hidden when there is no type form on the page.
-        var elementsToHide = jQuery('#contribution-confirm-submit, #contribution-contributor-metadata');
+        //var elementsToHide = jQuery('#contribution-confirm-submit, #contribution-contributor-metadata');
         // Duration of hide/show animation.
-        var duration = 0;
+        //var duration = 0;
         // Remove the noscript-fallback type submit button.
-        jQuery('#submit-type').remove();
+        //jQuery('#submit-type').remove();
 
         // There should be only one possible value for contribution types
-        var value = '3';
+        //var value = '3';
 
-        elementsToHide.hide();
+        /*elementsToHide.hide();
         form.hide(duration, function() {
             form.empty();
             jQuery.post(url, {contribution_type: value}, function(data) {
@@ -35,8 +35,9 @@ function enableContributionAjaxForm(url) {
                });
             });
         });
+        */
 
-        /* OLD VERSION KEPT AS TEMPLATE
+        // OLD VERSION KEPT AS TEMPLATE
         // Select element that controls the AJAX form.
         var contributionType = jQuery('#contribution-type');
         // Elements that should be hidden when there is no type form on the page.
@@ -68,7 +69,6 @@ function enableContributionAjaxForm(url) {
                 }
             });
         });
-      */
     });
 }
 
@@ -77,16 +77,3 @@ jQuery(document).ready(function() {
     var form = jQuery('#contribution-type-form');
     jQuery(form).trigger('omeka:elementformload');
 });
-
-// NOTE Ajout pour le projet EnJeuX
-function manageContributionPrivacyOptions() {
-  jQuery(document).ready(function() {
-    var publicCheckbox = jQuery('#contribution-public').is(':checked');
-    if (publicCheckbox) {
-      //Show options : public low-quality image or Creative Commons licence
-    }
-    else {
-      //Document only visible to researchers ~ private document
-    }
-  });
-}

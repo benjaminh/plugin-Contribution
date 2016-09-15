@@ -5,6 +5,7 @@ if (!Omeka) {
 Omeka.Elements = {};
 
 (function ($) {
+
     /**
      * Send an AJAX request to update a <div class="field"> that contains all
      * the form inputs for an element.
@@ -147,74 +148,273 @@ Omeka.Elements = {};
             }
 
             if ($(this).attr('id') == "element-257") {
-              console.log("element 257");
-              html = `
-              <select name="type-select" id='type-select'>
-                <optgroup label="Séjour familial">
-                  <option value="club">Club de vacances</option>
-                  <option value="camping">Camping</option>
-                  <option value="famille">Dans la famille</option>
-                </optgroup>
-                <optgroup label='Séjour organisé'>
-                  <option value="org-club">Club et village de vacances</option>
-                  <option value="org-camping">Camping</option>
-                  <option value="org-classe">Classe découverte</option>
-                  <option value="org-colonie">Colonie</option>
-                  <option value="org-accueil">Famille d'accueil</option>
-                </optgroup>
-              </select>
-              `;
-              $("#Elements-257-0-text").hide();
-              $(this).find('div.input').append(html);
-              $('#type-select').on('change', function(event) {
-                var selected = $("#type-select").val();
-                var group = '';
-                if ( selected.startsWith('org-') ) {
-                  group = 'Séjour organisé'
-                }
-                else {
-                  group = "Séjour familial";
-                }
-                $("#Elements-257-0-text").val(group + ', ' + $('#type-select option:selected').text());
-              });
+              // Check if field already exists - seems to be called 2 times - don't know why yet FIXME
+              if ($('#type-select').length === 0) {
+                html = `
+                <select name="type-select" id='type-select'>
+                  <optgroup label="Séjour familial">
+                    <option value="club">Club de vacances</option>
+                    <option value="camping">Camping</option>
+                    <option value="famille">Dans la famille</option>
+                  </optgroup>
+                  <optgroup label='Séjour organisé'>
+                    <option value="org-club">Club et village de vacances</option>
+                    <option value="org-camping">Camping</option>
+                    <option value="org-classe">Classe découverte</option>
+                    <option value="org-colonie">Colonie</option>
+                    <option value="org-accueil">Famille d'accueil</option>
+                  </optgroup>
+                </select>
+                `;
+                $("#Elements-257-0-text").hide();
+                $(this).find('div.input').append(html);
+                $('#type-select').on('change', function(event) {
+                  var selected = $("#type-select").val();
+                  var group = '';
+                  if ( selected.startsWith('org-') ) {
+                    group = 'Séjour organisé'
+                  }
+                  else {
+                    group = "Séjour familial";
+                  }
+                  $("#Elements-257-0-text").val(group + ', ' + $('#type-select option:selected').text());
+                });
+              }
             }
             else if ($(this).attr('id') == "element-264") {
-              html = `
-              <select name="status-select" id='status-select'>
-                <option value="part">Participant</option>
-                <optgroup label='Organisateur'>
-                  <option value="org-ben">Bénévole</option>
-                  <option value="org-sal">Salarié</option>
-                </optgroup>
-                <optgroup label='Encadrant sur place'>
-                  <option value="enc-ben">Bénévole</option>
-                  <option value="enc-sal">Salarié</option>
-                </optgroup>
-                <option value="fin">Financeur/Mécène</option>
-              </select>
-              `;
-              $("#Elements-264-0-text").hide();
-              $(this).find('div.input').append(html);
-              $('#status-select').on('change', function(event) {
-                var selected = $("#status-select").val();
-                var group = '';
-                if ( selected.startsWith('org-') ) {
-                  group = 'Organisateur';
-                }
-                else if ( selected.startsWith('enc-') ) {
-                  group = 'Encadrant sur place';
-                }
-                if (group != '') {
-                  $("#Elements-264-0-text").val(group + ', ' + $('#status-select option:selected').text());
-                }
-                else {
-                  $("#Elements-264-0-text").val($('#status-select option:selected').text());
-                }
-              });
+              // Check if field already exists - seems to be called 2 times - don't know why yet FIXME
+              if ($('#status-select').length === 0) {
+                html = `
+                <select name="status-select" id='status-select'>
+                  <option value="part">Participant</option>
+                  <optgroup label='Organisateur'>
+                    <option value="org-ben">Bénévole</option>
+                    <option value="org-sal">Salarié</option>
+                  </optgroup>
+                  <optgroup label='Encadrant sur place'>
+                    <option value="enc-ben">Bénévole</option>
+                    <option value="enc-sal">Salarié</option>
+                  </optgroup>
+                  <option value="fin">Financeur/Mécène</option>
+                </select>
+                `;
+                $("#Elements-264-0-text").hide();
+                $(this).find('div.input').append(html);
+                $('#status-select').on('change', function(event) {
+                  var selected = $("#status-select").val();
+                  var group = '';
+                  if ( selected.startsWith('org-') ) {
+                    group = 'Organisateur';
+                  }
+                  else if ( selected.startsWith('enc-') ) {
+                    group = 'Encadrant sur place';
+                  }
+                  if (group != '') {
+                    $("#Elements-264-0-text").val(group + ', ' + $('#status-select option:selected').text());
+                  }
+                  else {
+                    $("#Elements-264-0-text").val($('#status-select option:selected').text());
+                  }
+                });
+              }
             }
             else if ($(this).attr('id') == "element-261") {
               // Date picker TODO avoid HARDCODING
-              $( "#Elements-261-0-text" ).datepicker();
+              // Separate fields for year, month and display
+              // Save answer in hidden field
+              $( "#Elements-261-0-text" ).hide();
+              var radioButtons = `
+              <label class="radio"><input checked type="radio" name="optDate" value="1">Événément sur une journée</label>
+              <label class="radio"><input type="radio" name="optDate" value="2">Événement sur plusieurs jours</label>
+              <div class="btn-group" data-toggle="buttons">
+                <span class="button-checkbox">
+                  <button type="button" class="btn disabled" data-color="info">Année</button>
+                  <input type="checkbox" class="hidden" name="dateFormat" value='y' checked/>
+                </span>
+                <span class="button-checkbox">
+                  <button type="button" class="btn" data-color="info">Mois</button>
+                  <input type="checkbox" class="hidden" name="dateFormat" value='m'/>
+                </span>
+                <span class="button-checkbox">
+                  <button type="button" class="btn" data-color="info">Jour</button>
+                  <input type="checkbox" class="hidden" name="dateFormat" value='d'/>
+                </span>
+              </div>
+              `;
+              var dateFormat = `
+              <div id="datepicker1">
+                <input type="text" class="form-control">
+              </div>
+              <div id="datepicker2" style="display: none;">
+                <input type="text" class="form-control"/>
+                <span class="input-group-addon">au</span>
+                <input type="text" class="form-control"/>
+              </div>
+              `;
+              $( "#Elements-261-0-text" ).parent().append(radioButtons);
+              $( "#Elements-261-0-text" ).parent().append(dateFormat);
+              $('input:radio[name="optDate"]').on('change', function (event) {
+                var filterDate = $('input:radio[name="optDate"]:checked').val();
+                if (filterDate == 1) {
+                  $('#datepicker2').hide();
+                  $('#datepicker1').show();
+                }
+                else if (filterDate == 2) {
+                  // From date 1 to date 2
+                  $('#datepicker2').show();
+                  $('#datepicker1').hide();
+                }
+              });
+              $.datepicker.setDefaults($.datepicker.regional['fr']);
+              $('#datepicker1 input').datepicker( {
+                dateFormat: "yy",
+                autoclose: true,
+                changeYear: true,
+                showButtonPanel: true,
+                yearRange: "1800:2016"
+              });
+              $.each($("#datepicker2 input"), function() {
+                $(this).datepicker({
+                  dateFormat: "yy",
+                  autoclose: true
+                });
+              });
+
+              $('input:checkbox[name="dateFormat"]').on('change', function (event) {
+                var checked = [];
+                $.each($("input[name='dateFormat']:checked"), function() {
+                    checked.push($(this).val());
+                });
+                if ( checked.includes('m') && checked.includes('d') ) {
+                    $('#datepicker1 input').datepicker("destroy");
+                    $('#datepicker1 input').datepicker({
+                      dateFormat: "dd/mm/yy",
+                      autoclose: true
+                    });
+                    $.each($("#datepicker2 input"), function() {
+                        $(this).datepicker("destroy");
+                        $(this).datepicker({
+                          dateFormat: "dd/mm/yy",
+                          autoclose: true
+                        });
+                    });
+
+                }
+                else if ( checked.includes('m') && !checked.includes('d') ) {
+                    $('#datepicker1 input').datepicker("destroy");
+                    $('#datepicker1 input').datepicker({
+                      dateFormat: "mm/yy",
+                      autoclose: true
+                    });
+                    $.each($("#datepicker2 input"), function() {
+                        $(this).datepicker("destroy");
+                        $(this).datepicker({
+                          dateFormat: "mm/yy",
+                          autoclose: true
+                        });
+                    });
+
+                }
+                else if ( !checked.includes('m') && !checked.includes('d') ) {
+                  $('#datepicker1 input').datepicker("destroy");
+                  $('#datepicker1 input').datepicker({
+                    format: "yy",
+                    autoclose: true
+                  });
+                  $.each($("#datepicker2 input"), function() {
+                      $(this).datepicker("destroy");
+                      $(this).datepicker({
+                        dateFormat: "yy",
+                        autoclose: true
+                      });
+                  });
+
+                }
+              });
+
+              // Update DC field with new date
+              $('#datepicker1 input, #datepicker2 input').on('change', function() {
+                var filterDate = $('input:radio[name="optDate"]:checked').val();
+                if (filterDate == 1) {
+                  var date = $('#datepicker1 input').val();
+                  $('#Elements-261-0-text').val(date);
+                }
+                else if (filterDate == 2) {
+                  // From date 1 to date 2
+                  var date1 = $('#datepicker2 input:first-child').val();
+                  var date2 = $('#datepicker2 input:last-child').val();
+                  $('#Elements-261-0-text').val('Du ' + date1 + ' au ' + date2);
+                }
+              });
+
+              // Checkbox behaviour
+              $('.button-checkbox').each(function () {
+                  // Settings
+                  var $widget = $(this),
+                      $button = $widget.find('button'),
+                      $checkbox = $widget.find('input:checkbox'),
+                      color = $button.data('color'),
+                      settings = {
+                          on: {
+                              icon: 'glyphicon glyphicon-check'
+                          },
+                          off: {
+                              icon: 'glyphicon glyphicon-unchecked'
+                          }
+                      };
+                  // Event Handlers
+                  $button.on('click', function () {
+                      $checkbox.prop('checked', !$checkbox.is(':checked'));
+                      $checkbox.triggerHandler('change');
+                      updateDisplay();
+                  });
+                  $checkbox.on('change', function () {
+                    if ($(this).val() == 'd' && $(this).is(':checked') && !$('input[value="m"]:checkbox').is(':checked')) {
+                      $('input[value="m"]:checkbox').trigger('click');
+                    }
+                    else if ($(this).val() == 'm' && !$(this).is(':checked') && $('input[value="d"]:checkbox').is(':checked')) {
+                      $('input[value="d"]:checkbox').trigger('click');
+                    }
+                    updateDisplay();
+                  });
+
+                  // Actions
+                  function updateDisplay() {
+                      var isChecked = $checkbox.is(':checked');
+
+                      // Set the button's state
+                      $button.data('state', (isChecked) ? "on" : "off");
+
+                      // Set the button's icon
+                      $button.find('.state-icon')
+                          .removeClass()
+                          .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+                      // Update the button's color
+                      if (isChecked) {
+                          $button
+                              .removeClass('btn-default')
+                              .addClass('btn-' + color + ' active');
+                      }
+                      else {
+                          $button
+                              .removeClass('btn-' + color + ' active')
+                              .addClass('btn-default');
+                      }
+                  }
+
+                  // Initialization
+                  function init() {
+
+                      updateDisplay();
+
+                      // Inject the icon if applicable
+                      if ($button.find('.state-icon').length == 0) {
+                          $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i> ');
+                      }
+                  }
+                  init();
+              });
             }
             else if ($(this).attr('id') == "element-200") {
               // Hide the license field. Populate it with cc Chooser
@@ -227,7 +427,7 @@ Omeka.Elements = {};
             else if ($(this).attr('id') == "element-50") {
               // Hide the Access Rights element. Populate with license chooser info
               $(this).hide();
-              $(this).val( + recordId);
+              $(this).val($('#Elements-260-0-text').val() + recordId);
             }
             // Add form-control class for bootstrap
             // NOTE Had to be done with jQuery because Omeka creates only input elements and no "button" : check FormSubmit.php in Zend/View/Helper
