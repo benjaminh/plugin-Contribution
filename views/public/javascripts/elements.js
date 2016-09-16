@@ -218,11 +218,11 @@ Omeka.Elements = {};
                 });
               }
             }
-            else if ($(this).attr('id') == "element-261") {
+            else if ($(this).attr('id') == "element-268") {
               // Date picker TODO avoid HARDCODING
               // Separate fields for year, month and display
               // Save answer in hidden field
-              $( "#Elements-261-0-text" ).hide();
+              $( "#Elements-268-0-text" ).hide();
               var radioButtons = `
               <label class="radio"><input checked type="radio" name="optDate" value="1">Événément sur une journée</label>
               <label class="radio"><input type="radio" name="optDate" value="2">Événement sur plusieurs jours</label>
@@ -251,8 +251,8 @@ Omeka.Elements = {};
                 <input type="text" class="form-control"/>
               </div>
               `;
-              $( "#Elements-261-0-text" ).parent().append(radioButtons);
-              $( "#Elements-261-0-text" ).parent().append(dateFormat);
+              $( "#Elements-268-0-text" ).parent().append(radioButtons);
+              $( "#Elements-268-0-text" ).parent().append(dateFormat);
               $('input:radio[name="optDate"]').on('change', function (event) {
                 var filterDate = $('input:radio[name="optDate"]:checked').val();
                 if (filterDate == 1) {
@@ -265,18 +265,24 @@ Omeka.Elements = {};
                   $('#datepicker1').hide();
                 }
               });
-              $.datepicker.setDefaults($.datepicker.regional['fr']);
+              var container = $('.bootstrap-iso form');
               $('#datepicker1 input').datepicker( {
-                dateFormat: "yy",
+                startDate: "1800",
+                format: "yyyy",
                 autoclose: true,
-                changeYear: true,
-                showButtonPanel: true,
-                yearRange: "1800:2016"
+                container: $(this),
+                minViewMode: 2,
+                language: "fr"
               });
+              $('#datepicker1 input').datepicker("setEndDate", new Date());
               $.each($("#datepicker2 input"), function() {
                 $(this).datepicker({
-                  dateFormat: "yy",
-                  autoclose: true
+                  startDate: "1800",
+                  format: "yyyy",
+                  autoclose: true,
+                  container: $(this),
+                  minViewMode: 2,
+                  language: "fr"
                 });
               });
 
@@ -286,49 +292,40 @@ Omeka.Elements = {};
                     checked.push($(this).val());
                 });
                 if ( checked.includes('m') && checked.includes('d') ) {
-                    $('#datepicker1 input').datepicker("destroy");
-                    $('#datepicker1 input').datepicker({
-                      dateFormat: "dd/mm/yy",
-                      autoclose: true
-                    });
-                    $.each($("#datepicker2 input"), function() {
-                        $(this).datepicker("destroy");
-                        $(this).datepicker({
-                          dateFormat: "dd/mm/yy",
-                          autoclose: true
-                        });
-                    });
-
+                  $('#datepicker1 input').datepicker("clearDates");
+                  $('#datepicker1 input').datepicker('setFormat', 'dd/mm/yyyy');
+                  $('#datepicker1 input').datepicker('setStartDate', '01/01/1800');
+                  $('#datepicker1 input').datepicker('setMinViewMode', 0);
+                  $.each($("#datepicker2 input"), function() {
+                    $(this).datepicker('setStartDate', '01/01/1800');
+                    $(this).datepicker("clearDates");
+                    $(this).datepicker('setFormat', 'dd/mm/yyyy');
+                    $(this).datepicker('setMinViewMode', 0);
+                  });
                 }
                 else if ( checked.includes('m') && !checked.includes('d') ) {
-                    $('#datepicker1 input').datepicker("destroy");
-                    $('#datepicker1 input').datepicker({
-                      dateFormat: "mm/yy",
-                      autoclose: true
-                    });
-                    $.each($("#datepicker2 input"), function() {
-                        $(this).datepicker("destroy");
-                        $(this).datepicker({
-                          dateFormat: "mm/yy",
-                          autoclose: true
-                        });
-                    });
-
+                  $('#datepicker1 input').datepicker("clearDates");
+                  $('#datepicker1 input').datepicker('setFormat', 'mm/yyyy');
+                  $('#datepicker1 input').datepicker('setMinViewMode', 1);
+                  $('#datepicker1 input').datepicker('setStartDate', '01/1800');
+                  $.each($("#datepicker2 input"), function() {
+                    $(this).datepicker('setStartDate', '01/1800');
+                    $(this).datepicker("clearDates");
+                    $(this).datepicker('setFormat', 'mm/yyyy');
+                    $(this).datepicker('setMinViewMode', 1);
+                  });
                 }
                 else if ( !checked.includes('m') && !checked.includes('d') ) {
-                  $('#datepicker1 input').datepicker("destroy");
-                  $('#datepicker1 input').datepicker({
-                    format: "yy",
-                    autoclose: true
-                  });
+                  $('#datepicker1 input').datepicker("clearDates");
+                  $('#datepicker1 input').datepicker('setFormat', 'yyyy');
+                  $('#datepicker1 input').datepicker('setStartDate', '1800');
+                  $('#datepicker1 input').datepicker('setMinViewMode', 2);
                   $.each($("#datepicker2 input"), function() {
-                      $(this).datepicker("destroy");
-                      $(this).datepicker({
-                        dateFormat: "yy",
-                        autoclose: true
-                      });
+                    $(this).datepicker('setStartDate', '1800');
+                    $(this).datepicker("clearDates");
+                    $(this).datepicker('setFormat', 'yyyy');
+                    $(this).datepicker('setMinViewMode', 2);
                   });
-
                 }
               });
 
@@ -337,13 +334,13 @@ Omeka.Elements = {};
                 var filterDate = $('input:radio[name="optDate"]:checked').val();
                 if (filterDate == 1) {
                   var date = $('#datepicker1 input').val();
-                  $('#Elements-261-0-text').val(date);
+                  $('#Elements-268-0-text').val(date);
                 }
                 else if (filterDate == 2) {
                   // From date 1 to date 2
                   var date1 = $('#datepicker2 input:first-child').val();
                   var date2 = $('#datepicker2 input:last-child').val();
-                  $('#Elements-261-0-text').val('Du ' + date1 + ' au ' + date2);
+                  $('#Elements-268-0-text').val('Du ' + date1 + ' au ' + date2);
                 }
               });
 

@@ -16,9 +16,9 @@ queue_css_file('form');
 //load bootstrap files
 queue_css_file('bootstrap-iso');
 queue_js_file('bootstrap.min');
-//queue_css_file('bootstrap-datepicker.min');
-//queue_js_file('bootstrap-datepicker.min');
-//queue_js_file('locales/bootstrap-datepicker.fr.min');
+queue_css_file('bootstrap-datepicker.min');
+queue_js_file('bootstrap-datepicker');
+queue_js_file('locales/bootstrap-datepicker.fr.min');
 
 //load jeoquery library
 queue_js_file('jeoquery');
@@ -47,12 +47,8 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
-<script type="text/javascript"
-        src="https://raw.githubusercontent.com/jquery/jquery-ui/master/ui/i18n/datepicker-fr.js">
-</script>
 
 <div id="primary" class='bootstrap-iso'>
 <?php echo flash(); ?>
