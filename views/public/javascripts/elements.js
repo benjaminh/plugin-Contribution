@@ -82,6 +82,10 @@ Omeka.Elements = {};
             fields = context.find(fieldSelector);
         }
 
+
+        // Remove DC basic explanations
+        $('.explanation').hide();
+
         // Load openlayer div
         loadMapDiv = function(elementId) {
           var locationElement = jQuery(elementId);
@@ -147,21 +151,32 @@ Omeka.Elements = {};
                 removeButtons.hide();
             }
 
-            if ($(this).attr('id') == "element-257") {
+            if ($(this).attr('id') == "element-1") {
+              $(this).find('div:first-child label').text('Espace de saisie libre');
+              var textElem = $(this).find('label.use-html').contents().filter(function(){ return this.nodeType == 3; });
+              textElem.remove();
+              $(this).find('label.use-html').prepend("Activer l'éditeur avancé");
+            }
+            else if ($(this).attr('id') == "element-257") {
               // Check if field already exists - seems to be called 2 times - don't know why yet FIXME
               if ($('#type-select').length === 0) {
                 html = `
                 <select name="type-select" id='type-select'>
                   <optgroup label="Séjour familial">
-                    <option value="club">Club de vacances</option>
-                    <option value="camping">Camping</option>
+                    <option value="camping">Campings</option>
+                    <option value="chambre">Chambres d'hôtes</option>
+                    <option value="club">Clubs et villages de vacances</option>
                     <option value="famille">Dans la famille</option>
+                    <option value="gites">Gîtes et assimilés (meublés classés de tourisme)</option>
+                    <option value="hotel">Hôtels</option>
                   </optgroup>
                   <optgroup label='Séjour organisé'>
-                    <option value="org-club">Club et village de vacances</option>
-                    <option value="org-camping">Camping</option>
-                    <option value="org-classe">Classe découverte</option>
-                    <option value="org-colonie">Colonie</option>
+                    <option value="org-auberge">Auberges de jeunesse</option>
+                    <option value="org-camping">Campings</option>
+                    <option value="org-chambre">Chambres d'hôtes</option>
+                    <option value="org-classe">Classes découverte</option>
+                    <option value="org-club">Clubs et villages de vacances</option>
+                    <option value="org-colonie">Colonies de vacances</option>
                     <option value="org-accueil">Famille d'accueil</option>
                   </optgroup>
                 </select>
@@ -196,6 +211,8 @@ Omeka.Elements = {};
                     <option value="enc-sal">Salarié</option>
                   </optgroup>
                   <option value="fin">Financeur/Mécène</option>
+                  <option value="interm">Je n'ai pas participé à cet événement</option>
+                  <option value="autre">Autre</option>
                 </select>
                 `;
                 $("#Elements-264-0-text").hide();
@@ -218,18 +235,23 @@ Omeka.Elements = {};
                 });
               }
             }
-            else if ($(this).attr('id') == "element-268") {
+            else if ($(this).attr('id') == "element-261") {
               // Date picker TODO avoid HARDCODING
               // Separate fields for year, month and display
               // Save answer in hidden field
-              $( "#Elements-268-0-text" ).hide();
+              $( "#Elements-261-0-text" ).hide();
               var radioButtons = `
-              <label class="radio"><input checked type="radio" name="optDate" value="1">Événément sur une journée</label>
-              <label class="radio"><input type="radio" name="optDate" value="2">Événement sur plusieurs jours</label>
-              <div class="btn-group" data-toggle="buttons">
+              <p class="explanation-info">1. Sélectionner le type d'événément</p>
+              <div class="btn-group">
+                <label class="btn"><input checked type="radio" name="optDate" value="1"/>Événément sur une journée</label>
+                <label class="btn"><input type="radio" name="optDate" value="2"/>Événement sur plusieurs jours</label>
+                <label class="btn"><input type="radio" name="optDate" value="3"/>Date inconnue</label>
+              </div>
+              <p class="explanation-info">2. Sélectionner le format de la date "Année", "Mois/Année", "Jour/Mois/Année"</p>
+              <div class="btn-group date-format" data-toggle="buttons">
                 <span class="button-checkbox">
-                  <button type="button" class="btn disabled" data-color="info">Année</button>
-                  <input type="checkbox" class="hidden" name="dateFormat" value='y' checked/>
+                  <button type="button" class="btn" data-color="info">Année</button>
+                  <input type="checkbox" class="hidden" name="dateFormat" value='y'/>
                 </span>
                 <span class="button-checkbox">
                   <button type="button" class="btn" data-color="info">Mois</button>
@@ -242,45 +264,68 @@ Omeka.Elements = {};
               </div>
               `;
               var dateFormat = `
-              <div id="datepicker1">
+              <div id="datepicker1" style="display: none;">
+                <p class="explanation-info">3. Cliquer sur le champ de saisie puis sélectionner la date à l'aide du calendrier</p>
                 <input type="text" class="form-control">
               </div>
               <div id="datepicker2" style="display: none;">
+              <p class="explanation-info">3. Cliquer sur chaque champ de saisie puis sélectionner la date à l'aide du calendrier</p>
                 <input type="text" class="form-control"/>
                 <span class="input-group-addon">au</span>
                 <input type="text" class="form-control"/>
               </div>
               `;
-              $( "#Elements-268-0-text" ).parent().append(radioButtons);
-              $( "#Elements-268-0-text" ).parent().append(dateFormat);
+              if (!$( "#datepicker1" ).length) {
+                $( "#Elements-261-0-text" ).parent().append(radioButtons);
+                $( "#Elements-261-0-text" ).parent().append(dateFormat);
+              }
               $('input:radio[name="optDate"]').on('change', function (event) {
+                // Unpick all date format choice
+                $('.button-checkbox').each( function() {
+                  var $widget = $(this),
+                      $button = $widget.find('button'),
+                      $checkbox = $widget.find('input:checkbox');
+
+                  $checkbox.prop('checked', false);
+                  $checkbox.triggerHandler('change');
+                });
+                // Hide datepickers
+                $('#datepicker1, #datepicker2').hide();
                 var filterDate = $('input:radio[name="optDate"]:checked').val();
                 if (filterDate == 1) {
-                  $('#datepicker2').hide();
-                  $('#datepicker1').show();
+                  //$('#datepicker2').hide();
+                  //$('#datepicker1').show();
+                  $('#element-261 div.btn-group').show();
                 }
                 else if (filterDate == 2) {
                   // From date 1 to date 2
-                  $('#datepicker2').show();
-                  $('#datepicker1').hide();
+                  //$('#datepicker2').show();
+                  //$('#datepicker1').hide();
+                  $('#element-261 div.btn-group').show();
+                }
+                else if (filterDate == 3) {
+                  $('#datepicker1, #datepicker2').hide();
+                  //$('#element-261 div.date-format').hide();
+                  $('#element-261 div.date-format').hide();
+                  $( "#Elements-261-0-text" ).val("Date inconnue");
                 }
               });
-              var container = $('.bootstrap-iso form');
+              var container = $('#element-261 div.input');
               $('#datepicker1 input').datepicker( {
-                startDate: "1800",
+                startDate: "1600",
                 format: "yyyy",
                 autoclose: true,
-                container: $(this),
+                container: container,
                 minViewMode: 2,
                 language: "fr"
               });
               $('#datepicker1 input').datepicker("setEndDate", new Date());
               $.each($("#datepicker2 input"), function() {
                 $(this).datepicker({
-                  startDate: "1800",
+                  startDate: "1600",
                   format: "yyyy",
                   autoclose: true,
-                  container: $(this),
+                  container: container,
                   minViewMode: 2,
                   language: "fr"
                 });
@@ -294,10 +339,10 @@ Omeka.Elements = {};
                 if ( checked.includes('m') && checked.includes('d') ) {
                   $('#datepicker1 input').datepicker("clearDates");
                   $('#datepicker1 input').datepicker('setFormat', 'dd/mm/yyyy');
-                  $('#datepicker1 input').datepicker('setStartDate', '01/01/1800');
+                  $('#datepicker1 input').datepicker('setStartDate', '01/01/1600');
                   $('#datepicker1 input').datepicker('setMinViewMode', 0);
                   $.each($("#datepicker2 input"), function() {
-                    $(this).datepicker('setStartDate', '01/01/1800');
+                    $(this).datepicker('setStartDate', '01/01/1600');
                     $(this).datepicker("clearDates");
                     $(this).datepicker('setFormat', 'dd/mm/yyyy');
                     $(this).datepicker('setMinViewMode', 0);
@@ -307,9 +352,9 @@ Omeka.Elements = {};
                   $('#datepicker1 input').datepicker("clearDates");
                   $('#datepicker1 input').datepicker('setFormat', 'mm/yyyy');
                   $('#datepicker1 input').datepicker('setMinViewMode', 1);
-                  $('#datepicker1 input').datepicker('setStartDate', '01/1800');
+                  $('#datepicker1 input').datepicker('setStartDate', '01/1600');
                   $.each($("#datepicker2 input"), function() {
-                    $(this).datepicker('setStartDate', '01/1800');
+                    $(this).datepicker('setStartDate', '01/1600');
                     $(this).datepicker("clearDates");
                     $(this).datepicker('setFormat', 'mm/yyyy');
                     $(this).datepicker('setMinViewMode', 1);
@@ -318,10 +363,10 @@ Omeka.Elements = {};
                 else if ( !checked.includes('m') && !checked.includes('d') ) {
                   $('#datepicker1 input').datepicker("clearDates");
                   $('#datepicker1 input').datepicker('setFormat', 'yyyy');
-                  $('#datepicker1 input').datepicker('setStartDate', '1800');
+                  $('#datepicker1 input').datepicker('setStartDate', '1600');
                   $('#datepicker1 input').datepicker('setMinViewMode', 2);
                   $.each($("#datepicker2 input"), function() {
-                    $(this).datepicker('setStartDate', '1800');
+                    $(this).datepicker('setStartDate', '1600');
                     $(this).datepicker("clearDates");
                     $(this).datepicker('setFormat', 'yyyy');
                     $(this).datepicker('setMinViewMode', 2);
@@ -334,13 +379,13 @@ Omeka.Elements = {};
                 var filterDate = $('input:radio[name="optDate"]:checked').val();
                 if (filterDate == 1) {
                   var date = $('#datepicker1 input').val();
-                  $('#Elements-268-0-text').val(date);
+                  $('#Elements-261-0-text').val(date);
                 }
                 else if (filterDate == 2) {
                   // From date 1 to date 2
                   var date1 = $('#datepicker2 input:first-child').val();
                   var date2 = $('#datepicker2 input:last-child').val();
-                  $('#Elements-268-0-text').val('Du ' + date1 + ' au ' + date2);
+                  $('#Elements-261-0-text').val('Du ' + date1 + ' au ' + date2);
                 }
               });
 
@@ -361,16 +406,38 @@ Omeka.Elements = {};
                       };
                   // Event Handlers
                   $button.on('click', function () {
+                      // Display datepickers based on event type
+                      var filterDate = $('input:radio[name="optDate"]:checked').val();
+                      if (filterDate == 1) {
+                        $('#datepicker2').hide();
+                        $('#datepicker1').show();
+                      }
+                      else if (filterDate == 2) {
+                        // From date 1 to date 2
+                        $('#datepicker2').show();
+                        $('#datepicker1').hide();
+                      }
+
+
                       $checkbox.prop('checked', !$checkbox.is(':checked'));
                       $checkbox.triggerHandler('change');
                       updateDisplay();
                   });
                   $checkbox.on('change', function () {
-                    if ($(this).val() == 'd' && $(this).is(':checked') && !$('input[value="m"]:checkbox').is(':checked')) {
+                    if ($(this).val() == 'd' && $(this).is(':checked') && !$('input[value="m"]:checkbox').is(':checked') && !$('input[value="y"]:checkbox').is(':checked')) {
                       $('input[value="m"]:checkbox').trigger('click');
+                    }
+                    else if ($(this).val() == 'd' && $(this).is(':checked') && !$('input[value="m"]:checkbox').is(':checked')) {
+                      $('input[value="m"]:checkbox').trigger('click');
+                    }
+                    else if ($(this).val() == 'm' && $(this).is(':checked') && !$('input[value="y"]:checkbox').is(':checked')) {
+                      $('input[value="y"]:checkbox').trigger('click');
                     }
                     else if ($(this).val() == 'm' && !$(this).is(':checked') && $('input[value="d"]:checkbox').is(':checked')) {
                       $('input[value="d"]:checkbox').trigger('click');
+                    }
+                    else if ($(this).val() == 'y' && !$(this).is(':checked') && $('input[value="m"]:checkbox').is(':checked')) {
+                      $('input[value="m"]:checkbox').trigger('click');
                     }
                     updateDisplay();
                   });
@@ -421,10 +488,41 @@ Omeka.Elements = {};
               // Hide the Access Rights element. Populate with license chooser info
               $(this).hide();
             }
+            else if ($(this).attr('id') == "element-260") {
+              $(this).hide();
+              var selected_doc_type = $('#contribution-type button.active');
+              $('#Elements-260-0-text').val(selected_doc_type.attr("value"));
+            }
+            else if ($(this).attr('id') == "element-262") {
+
+              if ($('#age-select').length === 0) {
+                html = `
+                <select name="age-select" id='age-select' multiple>
+                  <option value="mat">Maternelle (3-6 ans)</option>
+                  <option value="ce">Élémentaire (6-9 ans)</option>
+                  <option value="cm">Cours Moyen (9-11 ans)</option>
+                  <option value="college">Collège (11-15 ans)</option>
+                  <option value="lycee">Lycée (15-18 ans)</option>
+                  <option value="18">>18 ans</option>
+                </select>
+                `;
+                $("#Elements-262-0-text").hide();
+                $(this).find('div.input').append(html);
+                $('#age-select').on('change', function(event) {
+                  setTimeout( function () {
+                    var selected = $('button[data-id="age-select"]').attr('title');
+                    console.log(selected);
+                    $('#Elements-262-0-text').val(selected);
+                  }, 10);
+                });
+                $('#age-select').attr("multiple", "multiple");
+              }
+            }
             else if ($(this).attr('id') == "element-50") {
               // Hide the Access Rights element. Populate with license chooser info
               $(this).hide();
-              $(this).val($('#Elements-260-0-text').val() + recordId);
+              var titre = $('#Elements-260-0-text').val();
+              $('#Elements-50-0-text').val(titre);
             }
             // Add form-control class for bootstrap
             // NOTE Had to be done with jQuery because Omeka creates only input elements and no "button" : check FormSubmit.php in Zend/View/Helper

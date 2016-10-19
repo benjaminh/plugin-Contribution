@@ -780,9 +780,9 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
         $contributionElement = $this->_db->getTable('ContributionTypeElement')->findByElementAndType($element, $type);
         if ($contributionElement->long_text == 0) {
             $components['input'] = $view->formText($args['input_name_stem'] . '[text]', $args['value']);
+            $components['html_checkbox'] = null; // Remove the "use html" checkbox for WYSIWYG
         }
-        //$components['form_controls'] = null; // Remove the "cancel input" button
-        $components['html_checkbox'] = null;
+        $components['form_controls'] = null; // Remove the "cancel input" button
         return $components;
     }
 

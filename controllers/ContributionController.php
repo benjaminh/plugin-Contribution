@@ -159,7 +159,7 @@ class Contribution_ContributionController extends Omeka_Controller_AbstractActio
 
     /**
      * Creates the reCAPTCHA object and returns it.
-     * 
+     *
      * @return Zend_Captcha_Recaptcha|null
      */
     protected function _setupCaptcha()
@@ -376,13 +376,13 @@ class Contribution_ContributionController extends Omeka_Controller_AbstractActio
      */
     protected function _validateContribution($post)
     {
-        
+
         // ReCaptcha ignores the first argument.
         if ($this->_captcha and !$this->_captcha->isValid(null, $_POST)) {
             $this->_helper->flashMessenger(__('Your CAPTCHA submission was invalid, please try again.'), 'error');
             return false;
         }
-                
+
         if ($post['terms-agree'] == 0) {
             $this->_helper->flashMessenger(__('You must agree to the Terms and Conditions.'), 'error');
             return false;

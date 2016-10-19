@@ -50,11 +50,10 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
 
-<div id="primary" class='bootstrap-iso'>
+<div id="primary">
 <?php echo flash(); ?>
 
     <h1>Portail documentaire du programme de recherche Enfance et Jeunesse</h1>
-    <p> Vous êtes dans la section contribution du portail, dédiée aux appels à participation. </p>
 
     <h2><?php echo $head['title']; ?></h2>
 
@@ -62,10 +61,24 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
         <?php $session = new Zend_Session_Namespace;
               $session->redirect = absolute_url();
         ?>
-        <p>Pour contribuer au projet, vous devez <a href='<?php echo url('guest-user/user/register'); ?>'>créer un compte</a> ou <a href='<?php echo url('guest-user/user/login'); ?>'>vous identifiez</a>.</p>
-        <p>Cette création de compte ne vous prendra que quelques secondes. Une fois qu'un administrateur du programme de recherche aura validé votre compte, vous pourrez toujours contribuer de manière anonyme (auquel cas seuls les chercheurs du programme EnJeuX auront accès à vos informations et documents et pourront vous contacter).</p>
+        <p>Pour contribuer au projet, vous devez <a href='<?php echo url('guest-user/user/register'); ?>'>créer un compte</a> ou <a href='<?php echo url('guest-user/user/login'); ?>'>vous identifier</a>.</p>
+        <p>Cette création de compte ne vous prendra que quelques secondes. Une fois qu'un administrateur aura validé votre compte, vous pourrez déposer votre document.</p>
+
+        <img src="<?php echo img('schema_contributions_portail.png'); ?>" style="width: 100%;"/>
+
+        <h4>Qui peut déposer ?</h4>
+        <p>Tout le monde, que vous soyez un particulier, un chercheur ou que vous représentiez une institution ou une entreprise.</p>
+        <h4>Qui aura accès à mon document ?</h4>
+        <p>Lors du remplissage du formulaire de contribution, vous choisissez les conditions d'accès à votre document (accès public sous licence Creative Commons, accès restreint, accès privé)</p>
+        <h4>À quoi ça sert?</h4>
+    <P>Cette collecte de documents permettra de mieux connaître les pratiques vacancières
+    des enfants et des jeunes et de comprendre la manière dont le développement des
+    mobilités de loisir a influencé la structuration des territoires, notamment l’évolution
+    des zones touristiques. Cette expertise est cruciale pour accompagner les
+    territoires dans leur politique d’aménagement.</P>
+
     <?php else: ?>
-        <form method="post" action="" enctype="multipart/form-data">
+        <form method="post" action="" enctype="multipart/form-data" class='bootstrap-iso'>
             <fieldset id="contribution-item-metadata">
                 <?php
                   /* THIS SECTION ASKS FOR ELEMENT TYPE
@@ -73,11 +86,29 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
                   */
                   ?>
                   <div class="inputs">
+                    <p>Sélectionner le type de document que vous souhaitez déposer en cliquant sur le bouton correspondant.</p>
+                    <div id="contribution-type" class="btn-toolbar">
+                      <div class="btn-group" role="group">
+                        <button title="Photographie, témoignage libre" type="button" class="btn btn-primary" name="temoignage" value="Témoignage ou archive personnelle">Témoignage ou archive personnelle</button>
+                      </div>
+                      <div class="btn-group" role="group">
+                        <button title="Compte rendu, devis, règlement intérieur, statuts d'association" type="button" class="btn btn-primary" name="docadm" value="Document administratif">Document administratif</button>
+                      </div>
+                      <div class="btn-group" role="group">
+                        <button title="Décret, arrêté municipal" type="button" class="btn btn-primary" name="texteregl" value="Texte réglementaire">Texte réglementaire</button>
+                      </div>
+                      <div class="btn-group" role="group">
+                        <button title="Catalogue, flyer, affiche" type="button" class="btn btn-primary" name="comm" value="Outil de communication">Outil de communication</button>
+                      </div>
+                      <div class="btn-group" role="group">
+                        <button title="Plan" type="button" class="btn btn-primary" name="doctech" value="Document technique">Document technique</button>
+                      </div>
+                    </div>
                       <!-- <label for="contribution-type"><?php //echo __("What type of item do you want to contribute?"); ?></label> -->
-                      <?php $options = get_table_options('ContributionType' ); ?>
-                      <?php $typeId = isset($type) ? $type->id : '' ; ?>
-                      <?php echo $this->formSelect( 'contribution_type', $typeId, array('multiple' => false, 'id' => 'contribution-type') , $options); ?>
-                      <input type="submit" name="submit-type" id="submit-type" value="Select" />
+                      <?php //$options = get_table_options('ContributionType' ); ?>
+                      <?php //$typeId = isset($type) ? $type->id : '' ; ?>
+                      <?php //echo $this->formSelect( 'contribution_type', $typeId, array('multiple' => false, 'id' => 'contribution-type') , $options); ?>
+                      <!-- <input type="submit" name="submit-type" id="submit-type" value="Select" /> -->
                   </div>
 
                   <?php
@@ -125,6 +156,13 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
   // Add some style to element with bootstrap
   (function ($) {
 
+    $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+    });
+
     var select = $('#form-submit');
     select.addClass("btn btn-success");
 
@@ -135,13 +173,7 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
     //contributionType.hide();
     //$('#contribution-type option[value=3]').prop('selected', true).change();
 
-    // Handle date picker
-    /*
-    $('input:radio[name="optDate"]').on('change', function (event) {
-      // Update DC element with date
-      $( "#Elements-261-0-text" ).val();
-    });
-    */
+    $('#contribution-type button').tooltip();
 
     // Display Creative Commons Chooser when selecting 'public contribution'
     var publicCheckbox = $('#contribution-public');
@@ -179,7 +211,6 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
       var chosenLicense = $('#cc_js_result_uri').val();
       if (chosenLicense != '') {
         $("#Elements-200-0-text").val(chosenLicense);
-        console.log("License changed " + chosenLicense);
       }
     });
     $('input[name=cc_js_no_lic]').on('change', function() {
@@ -192,8 +223,6 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
         $("#Elements-199-0-text").val('Document accessible uniquement aux chercheurs');
       }
     });
-
-    // Populate Title field with Contribution Type and id number
 
   })(jQuery);
 </script>

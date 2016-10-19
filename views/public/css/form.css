@@ -1,7 +1,6 @@
 
 div#contribution-type-form div.inputs {
-	width: 60%;
-
+	width: 100%;
 }
 
 div#location_form {
@@ -34,7 +33,7 @@ div.contribution-userprofile.exists {
 .icon-btn {
     padding: 1px 15px 3px 2px !important;
 		margin: 10px !important;
-    border-radius:50px !important;
+    border-radius: 50px !important;
 }
 .panel-heading {
 	background: #fff !important;

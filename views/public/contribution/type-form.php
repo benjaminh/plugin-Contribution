@@ -27,6 +27,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
     echo '</p>';
   }
   else {
+    /*
     if ($type->id == 3) {
       echo '<h4>';
       echo __('Déposer une %s', $type->display_name, 'en remplissant le formulaire ci-dessous');
@@ -37,8 +38,13 @@ jQuery(document).bind('omeka:elementformload', function (event) {
     echo __('Déposer un %s', $type->display_name, 'en remplissant le formulaire ci-dessous');
     echo '</h4>';
     }
+    */
 
   ?>
+  <br/>
+  <p class="explanation-info">
+    <b>Afin de  connaitre le contexte dans lequel s’inscrivait votre séjour de vacances, merci de renseigner les champs ci-dessous.</b>
+  </p>
 
   <?php
   if ($type->isFileRequired()):
@@ -69,6 +75,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
         <div class="panel-body">
           <div class="row">
             <div class="form-group col-md-12">
+              <input id="contribution-type" name="contribution_type" value="<?php echo $type->id; ?>" style="display: none;">
               <?php
               foreach ($type->getTypeElements() as $contributionTypeElement) {
                   echo $this->elementForm($contributionTypeElement->Element, $item, array('contributionTypeElement'=>$contributionTypeElement));
