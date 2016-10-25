@@ -123,6 +123,8 @@ Omeka.Elements = {};
         // Geocode function
         function geocode(address)
         {
+
+          console.log(address);
           if (typeof marker !== 'undefined')
           {
             map.removeLayer(marker);
@@ -216,17 +218,21 @@ Omeka.Elements = {};
                 </select>
                 `;
                 $("#Elements-264-0-text").hide();
-                $(this).find('div.input').append(html);
-                $('#status-select').on('change', function(event) {
+                $(this).find('div.input').prepend(html);
+                $('#status-select').on( 'change', function(event) {
                   var selected = $("#status-select").val();
                   var group = '';
+                  $("#Elements-264-0-text").hide();
                   if ( selected.startsWith('org-') ) {
                     group = 'Organisateur';
                   }
                   else if ( selected.startsWith('enc-') ) {
                     group = 'Encadrant sur place';
                   }
-                  if (group != '') {
+                  if ( selected == 'autre' ) {
+                    $('#Elements-264-0-text').show();
+                  }
+                  else if ( group != '' ) {
                     $("#Elements-264-0-text").val(group + ', ' + $('#status-select option:selected').text());
                   }
                   else {
@@ -484,6 +490,14 @@ Omeka.Elements = {};
               // Hide the license field. Populate it with cc Chooser
               $(this).hide();
             }
+            else if ($(this).attr('id') == "element-254") {
+              // Hide the Date de création de l'organisme → travail de collation a posteriori
+              $(this).hide();
+            }
+            else if ($(this).attr('id') == "element-51") {
+              // Hide the Type de document → travail de collation a posteriori (EAD type)
+              $(this).hide();
+            }
             else if ($(this).attr('id') == "element-199") {
               // Hide the Access Rights element. Populate with license chooser info
               $(this).hide();
@@ -504,6 +518,7 @@ Omeka.Elements = {};
                   <option value="college">Collège (11-15 ans)</option>
                   <option value="lycee">Lycée (15-18 ans)</option>
                   <option value="18">>18 ans</option>
+                  <option value="idk">Ne sais pas</option>
                 </select>
                 `;
                 $("#Elements-262-0-text").hide();
@@ -523,6 +538,36 @@ Omeka.Elements = {};
               $(this).hide();
               var titre = $('#Elements-260-0-text').val();
               $('#Elements-50-0-text').val(titre);
+            }
+            else if ( $(this).attr('id') == "element-266") {
+              // Touring stay or not
+              var toHide = $('#element-266 div.input-block');
+              var itinerantStart = $('#element-271').hide();
+              var itinerantArrival = $('#element-272').hide();
+              if ( !$('#itinerant').length ) {
+                html = `
+                  <label for="itinerant">Était-ce un séjour itinérant ?</label>
+                  <input name="itinerant" value="0" type="hidden">
+                  <input id="itinerant" name="itinerant" value="1" style="display: none;" type="checkbox">
+                `;
+                $(this).children(":last").prepend(html);
+                $('#itinerant').bootstrapSwitch();
+                $('#itinerant').on('switchChange.bootstrapSwitch', function(event, state) {
+                  if (state) {
+                    toHide.hide();
+                    itinerantStart.show();
+                    itinerantArrival.show();
+                  }
+                  else {
+                    toHide.show();
+                    itinerantStart.hide();
+                    itinerantArrival.hide();
+                  }
+                });
+              }
+            }
+            else if ( ($(this).attr('id') == "element-267") || ($(this).attr('id') == "element-268") || ($(this).attr('id') == "element-269") || ($(this).attr('id') == "element-270") ) {
+              $(this).hide();
             }
             // Add form-control class for bootstrap
             // NOTE Had to be done with jQuery because Omeka creates only input elements and no "button" : check FormSubmit.php in Zend/View/Helper
@@ -553,7 +598,7 @@ Omeka.Elements = {};
               }
               // Add geonames API query using jeoquery or google maps api
               // TODO AVOID HARDCODING
-              else if (element.attr('id') == "Elements-266-0-text") {
+              else if (element.attr('id') == "Elements-266-0-text" || element.attr('id') == "Elements-271-0-text" || element.attr('id') == "Elements-272-0-text") {
 
                 // USING GOOGLE MAPS API
                 var placeSearch, autocomplete;
@@ -570,17 +615,24 @@ Omeka.Elements = {};
                   postal_code: 'Elements-267-0-text'
                 };
                 // TODO AVOID HARDCODING
-                $('#Elements-266-0-text').attr("placeholder", "Saisissez un début d'adresse");
+                element.attr("placeholder", "Saisissez un début d'adresse");
                 // Create the autocomplete object, restricting the search to geographical
                 // location types.
                 autocomplete = new google.maps.places.Autocomplete(
                 // TODO AVOID HARDCODING
-                    /** @type {!HTMLInputElement} */(document.getElementById('Elements-266-0-text')),
+                    /** @type {!HTMLInputElement} */(document.getElementById(element.attr('id'))),
                     {types: ['geocode']});
                 // When the user selects an address from the dropdown, populate the address
                 // fields in the form.
-                autocomplete.addListener('place_changed', fillInAddress);
-
+                if (element.attr('id') == 'Elements-266-0-text') {
+                  autocomplete.addListener('place_changed', fillInAddress);
+                }
+                else {
+                  autocomplete.addListener('place_changed', callGeocode);
+                }
+                function callGeocode() {
+                  //geocode(element.value);
+                }
                 // [START region_fillform]
                 function fillInAddress() {
                   // Get the place details from the autocomplete object.

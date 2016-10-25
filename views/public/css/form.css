@@ -50,3 +50,6 @@ div.contribution-userprofile.exists {
 #mapdiv {
 	height: 300px;
 }
+label[for="itinerant"] {
+	font-weight: normal !important;
+}

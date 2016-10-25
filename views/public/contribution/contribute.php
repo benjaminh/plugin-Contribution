@@ -19,6 +19,8 @@ queue_js_file('bootstrap.min');
 queue_css_file('bootstrap-datepicker.min');
 queue_js_file('bootstrap-datepicker');
 queue_js_file('locales/bootstrap-datepicker.fr.min');
+queue_js_file('bootstrap-switch.min');
+queue_css_file('bootstrap-switch.min');
 
 //load jeoquery library
 queue_js_file('jeoquery');
@@ -70,14 +72,17 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
         <p>Tout le monde, que vous soyez un particulier, un chercheur ou que vous représentiez une institution ou une entreprise.</p>
         <h4>Qui aura accès à mon document ?</h4>
         <p>Lors du remplissage du formulaire de contribution, vous choisissez les conditions d'accès à votre document (accès public sous licence Creative Commons, accès restreint, accès privé)</p>
-        <h4>À quoi ça sert?</h4>
-    <P>Cette collecte de documents permettra de mieux connaître les pratiques vacancières
-    des enfants et des jeunes et de comprendre la manière dont le développement des
-    mobilités de loisir a influencé la structuration des territoires, notamment l’évolution
-    des zones touristiques. Cette expertise est cruciale pour accompagner les
-    territoires dans leur politique d’aménagement.</P>
+        <h4>À quoi ça sert ?</h4>
+        <p>Cette collecte de documents permettra de mieux connaître les pratiques vacancières des enfants et des jeunes et de comprendre la manière dont le développement des
+    mobilités de loisir a influencé la structuration des territoires, notamment l’évolution des zones touristiques. Cette expertise est cruciale pour accompagner les
+    territoires dans leur politique d’aménagement.</p>
 
     <?php else: ?>
+      <h4>À quoi ça sert ?</h4>
+      <p>Cette collecte de documents permettra de mieux connaître les pratiques vacancières des enfants et des jeunes et de comprendre la manière dont le développement des
+  mobilités de loisir a influencé la structuration des territoires, notamment l’évolution des zones touristiques. Cette expertise est cruciale pour accompagner les
+  territoires dans leur politique d’aménagement.</p>
+
         <form method="post" action="" enctype="multipart/form-data" class='bootstrap-iso'>
             <fieldset id="contribution-item-metadata">
                 <?php
@@ -92,16 +97,7 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
                         <button title="Photographie, témoignage libre" type="button" class="btn btn-primary" name="temoignage" value="Témoignage ou archive personnelle">Témoignage ou archive personnelle</button>
                       </div>
                       <div class="btn-group" role="group">
-                        <button title="Compte rendu, devis, règlement intérieur, statuts d'association" type="button" class="btn btn-primary" name="docadm" value="Document administratif">Document administratif</button>
-                      </div>
-                      <div class="btn-group" role="group">
-                        <button title="Décret, arrêté municipal" type="button" class="btn btn-primary" name="texteregl" value="Texte réglementaire">Texte réglementaire</button>
-                      </div>
-                      <div class="btn-group" role="group">
-                        <button title="Catalogue, flyer, affiche" type="button" class="btn btn-primary" name="comm" value="Outil de communication">Outil de communication</button>
-                      </div>
-                      <div class="btn-group" role="group">
-                        <button title="Plan" type="button" class="btn btn-primary" name="doctech" value="Document technique">Document technique</button>
+                        <button title="Compte rendu, devis, règlement intérieur, statuts d'association, documents techniques" type="button" class="btn btn-primary" name="docadm" value="Archive institutionnelle">Archive institutionnelle</button>
                       </div>
                     </div>
                       <!-- <label for="contribution-type"><?php //echo __("What type of item do you want to contribute?"); ?></label> -->
@@ -123,6 +119,12 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
                 <?php if(isset($captchaScript)): ?>
                     <div id="captcha" class="inputs"><?php echo $captchaScript; ?></div>
                 <?php endif; ?>
+                <p><?php echo __("In order to contribute, you must read and agree to the %s",  "<a href='" . contribution_contribute_url('terms') . "' target='_blank'>" . __('Terms and Conditions') . ".</a>"); ?></p>
+                <div class="inputs">
+                    <?php $agree = isset( $_POST['terms-agree']) ?  $_POST['terms-agree'] : 0 ?>
+                    <?php echo $this->formLabel('terms-agree', __('I agree to the Terms and Conditions.')); ?>
+                    <?php echo $this->formCheckbox('terms-agree', $agree, null, array('1', '0')); ?>
+                </div>
                 <div class="inputs">
                     <?php $public = isset($_POST['contribution-public']) ? $_POST['contribution-public'] : 0; ?>
                     <?php echo $this->formCheckbox('contribution-public', $public, null, array('1', '0')); ?>
@@ -136,12 +138,6 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
                     <?php $anonymous = isset($_POST['contribution-anonymous']) ? $_POST['contribution-anonymous'] : 0; ?>
                     <?php echo $this->formCheckbox('contribution-anonymous', $anonymous, null, array(1, 0)); ?>
                     <?php echo $this->formLabel('contribution-anonymous', __("Contribute anonymously.")); ?>
-                </div>
-                <p><?php echo __("In order to contribute, you must read and agree to the %s",  "<a href='" . contribution_contribute_url('terms') . "' target='_blank'>" . __('Terms and Conditions') . ".</a>"); ?></p>
-                <div class="inputs">
-                    <?php $agree = isset( $_POST['terms-agree']) ?  $_POST['terms-agree'] : 0 ?>
-                    <?php echo $this->formCheckbox('terms-agree', $agree, null, array('1', '0')); ?>
-                    <?php echo $this->formLabel('terms-agree', __('I agree to the Terms and Conditions.')); ?>
                 </div>
                 <?php echo $this->formSubmit('form-submit', __('Contribute'), array('class' => 'submitinput')); ?>
             </fieldset>
@@ -165,6 +161,7 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
 
     var select = $('#form-submit');
     select.addClass("btn btn-success");
+    select.prop('disabled', true);
 
     var contributionType = $('#contribution-type');
     contributionType.children("option[value='']").remove();
@@ -221,6 +218,27 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
       } else if (accessRights == 'chercheurs')
       {
         $("#Elements-199-0-text").val('Document accessible uniquement aux chercheurs');
+      }
+    });
+
+    // Modify "I agree with" checkbox with Yes/No
+    $('#terms-agree').hide();
+    $('#contribution-anonymous').parent().hide();
+    $('#contribution-public').parent().hide();
+    $.fn.bootstrapSwitch.defaults.onText = 'Oui';
+    $.fn.bootstrapSwitch.defaults.offText = 'Non';
+    $('#terms-agree').bootstrapSwitch();
+
+    $('#terms-agree').on('switchChange.bootstrapSwitch', function(event, state) {
+      if (state) {
+        $('#contribution-anonymous').parent().show();
+        $('#contribution-public').parent().show();
+        select.prop('disabled', false);
+      }
+      else {
+        $('#contribution-anonymous').parent().hide();
+        $('#contribution-public').parent().hide();
+        select.prop('disabled', false);
       }
     });
 
