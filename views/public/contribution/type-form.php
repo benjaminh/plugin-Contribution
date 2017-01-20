@@ -1,21 +1,6 @@
 <?php echo js_tag('vendor/tiny_mce/tiny_mce'); ?>
 <?php echo js_tag('elements'); ?>
 
-<script type="text/javascript" charset="utf-8">
-jQuery(window).load(function () {
-    // Must run the element form scripts AFTER reseting textarea ids.
-    jQuery(document).trigger('omeka:elementformload');
-
-    Omeka.Items.enableAddFiles(<?php echo js_escape(__('Add Another File')); ?>);
-    Omeka.Items.changeItemType(<?php echo js_escape(url("items/change-type")) ?><?php if ($id = metadata('item', 'id')) echo ', '.$id; ?>);
-});
-
-jQuery(document).bind('omeka:elementformload', function (event) {
-    Omeka.Elements.makeElementControls(event.target, <?php echo js_escape(url('elements/element-form')); ?>,'Item'<?php if ($id = metadata('item', 'id')) echo ', '.$id; ?>);
-    Omeka.Elements.enableWysiwyg(event.target);
-});
-//]]>
-</script>
 
 <div class="container-fluid">
   <!-- Bootstrap code inside container div -->
@@ -39,7 +24,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
     echo '</h4>';
     }
     */
-
+    $allowMultipleFiles = $type->multiple_files;
   ?>
   <br/>
   <!--<div id="expl-perso">
@@ -58,17 +43,8 @@ jQuery(document).bind('omeka:elementformload', function (event) {
   if ($type->isFileRequired()):
       $required = true;
   ?>
-
-  <div class="field">
-      <div class="two columns alpha">
-          <?php echo $this->formLabel('contributed_file', __('Vous souhaitez partager un document ? Cliquez sur le bouton « Parcourir »')); ?>
-      </div>
-      <div class="inputs five columns omega">
-          <?php echo $this->formFile('contributed_file', array('class' => 'fileinput')); ?>
-      </div>
-  </div>
-
   <?php endif; ?>
+
 
   <div id="accordion" class="panel-group" aria-multiselectable="true" role="tablist">
     <div class="panel panel-default">
@@ -102,13 +78,43 @@ jQuery(document).bind('omeka:elementformload', function (event) {
     <?php
     if (!isset($required) && $type->isFileAllowed()):
     ?>
-    <div class="field">
-            <div class="two columns alpha">
-                <?php echo $this->formLabel('contributed_file', __('Vous souhaitez partager un document associé à cet événement ? Cliquez sur le bouton « Parcourir »')); ?>
+
+    <div id="files-form" class="field drawer-contents">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('contributed_file', __('Vous souhaitez partager un document ? Cliquez sur le bouton « Parcourir »')); ?>
+        </div>
+        <div id="files-metadata" class="inputs five columns omega">
+            <div id="upload-files" class="files">
+                <?php echo $this->formFile($allowMultipleFiles ? 'contributed_file[0]' : 'contributed_file', array('class' => 'fileinput button')); ?>
+                <p class="explanation"><?php echo __('The maximum file size is %s.', max_file_size()); ?></p>
             </div>
-            <div class="inputs five columns omega">
-                <?php echo $this->formFile('contributed_file', array('class' => 'fileinput')); ?>
-            </div>
+        </div>
+    </div>
+
+
+      <?php if ($allowMultipleFiles): ?>
+      <script type="text/javascript" charset="utf-8">
+          <?php if (!empty($preset)): ?>
+            jQuery(window).load(function () {
+                Omeka.Items.enableAddFiles(<?php echo js_escape(__('Add Another File')); ?>);
+            });
+          <?php else: ?>
+            Omeka.Items.enableAddFiles(<?php echo js_escape(__('Add Another File')); ?>);
+          <?php endif; ?>
+      </script>
+      <?php endif; ?>
+    <?php endif; ?>
+
+
+    <?php if ($type->add_tags) : ?>
+    <div id="tag-form" class="field">
+        <div class="two columns alpha">
+            <?php echo $this->formLabel('tags', __('Add Tags')); ?>
+        </div>
+        <div class="inputs five columns omega">
+            <p id="add-tags-explanation" class="explanation"><?php echo __('Separate tags with %s', option('tag_delimiter')); ?></p>
+            <?php echo $this->formText('tags', isset($tags) ? $tags : ''); ?>
+        </div>
     </div>
     <?php endif; ?>
 

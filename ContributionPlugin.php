@@ -111,6 +111,8 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
             `item_type_id` INT UNSIGNED NOT NULL,
             `display_name` VARCHAR(255) NOT NULL,
             `file_permissions` ENUM('Disallowed', 'Allowed', 'Required') NOT NULL DEFAULT 'Disallowed',
+            `multiple_files` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            `add_tags` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
             PRIMARY KEY (`id`),
             UNIQUE KEY `item_type_id` (`item_type_id`)
             ) ENGINE=MyISAM;";
@@ -135,6 +137,7 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
             `item_id` INT UNSIGNED NOT NULL,
             `public` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
             `anonymous` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
             PRIMARY KEY (`id`),
             UNIQUE KEY `item_id` (`item_id`)
             ) ENGINE=MyISAM;";
@@ -252,6 +255,49 @@ class ContributionPlugin extends Omeka_Plugin_AbstractPlugin
                     ALTER TABLE `{$this->_db->ContributionContributedItem}` DROP `contributor_id` ;
                 ";
                 $this->_db->query($sql);
+            }
+        }
+        if (version_compare($oldVersion, 3.1, '<')) {
+            set_option('contribution_open', get_option('contribution_simple'));
+            delete_option('contribution_simple');
+        }
+
+        if (version_compare($oldVersion, '3.1.1', '<')) {
+            // Need to check columns with old versions.
+            $sql = "SHOW COLUMNS IN `{$this->_db->ContributionType}`";
+            $result = $this->_db->query($sql);
+            $cols = $result->fetchAll(Zend_Db::FETCH_COLUMN);
+            if (!in_array('multiple_files', $cols)) {
+                $sql = "ALTER TABLE `{$this->_db->ContributionType}` ADD COLUMN `multiple_files` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0'";
+                $this->_db->query($sql);
+            }
+        }
+
+        if (version_compare($oldVersion, '3.1.2', '<')) {
+            // Need to check columns with old versions.
+            $sql = "SHOW COLUMNS IN `{$this->_db->ContributionType}`";
+            $result = $this->_db->query($sql);
+            $cols = $result->fetchAll(Zend_Db::FETCH_COLUMN);
+            if (!in_array('add_tags', $cols)) {
+                $sql = "ALTER TABLE `{$this->_db->ContributionType}` ADD COLUMN `add_tags` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0'";
+                $this->_db->query($sql);
+            }
+        }
+        if (version_compare($oldVersion, '3.1.3', '<')) {
+            // Need to check columns with old versions.
+            $sql = "SHOW COLUMNS IN `{$this->_db->ContributionContributedItem}`";
+            $result = $this->_db->query($sql);
+            $cols = $result->fetchAll(Zend_Db::FETCH_COLUMN);
+            if (!in_array('deleted', $cols)) {
+                $sql = "ALTER TABLE `{$this->_db->ContributionContributedItem}` ADD COLUMN `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `anonymous`";
+                $this->_db->query($sql);
+            }
+        }
+
+        if (version_compare($oldVersion, '3.1.4', '<')) {
+            $pagePath = get_option('contribution_page_path');
+            if (empty($pagePath)) {
+                set_option('contribution_page_path', $this->_options['contribution_page_path']);
             }
         }
     }

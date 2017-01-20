@@ -112,7 +112,10 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
                   /* END OF MODIFIED SECTION */
                   ?>
                 <div id="contribution-type-form">
-                <?php if(isset($type)) { include('type-form.php'); }?>
+                  <?php if(isset($type)) {
+                    echo $this->partial('contribution/type-form.php');
+                  }
+                  ?>
                 </div>
             </fieldset>
 
