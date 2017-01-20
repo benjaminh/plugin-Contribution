@@ -38,7 +38,7 @@ function enableContributionAjaxForm(url) {
         */
 
         // OLD VERSION KEPT AS TEMPLATE
-        // Select element that controls the AJAX form.
+        // Select element that controls the AJAX form. NOTE ID already in use ?
         var contributionType = jQuery('#contribution-type .btn');
         // Elements that should be hidden when there is no type form on the page.
         var elementsToHide = jQuery('#contribution-confirm-submit, #contribution-contributor-metadata');

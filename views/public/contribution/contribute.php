@@ -82,6 +82,7 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
       <p>Cette collecte de documents permettra de mieux connaître les pratiques vacancières des enfants et des jeunes et de comprendre la manière dont le développement des
   mobilités de loisir a influencé la structuration des territoires, notamment l’évolution des zones touristiques. Cette expertise est cruciale pour accompagner les
   territoires dans leur politique d’aménagement.</p>
+      <p>Si vous avez des difficultés à nous transmettre vos documents, n’hésitez pas à nous contacter : contact[AT]enfance-jeunesse.fr.</p>
 
         <form method="post" action="" enctype="multipart/form-data" class='bootstrap-iso'>
             <fieldset id="contribution-item-metadata">
@@ -94,7 +95,7 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
                     <p>Sélectionner le type de document que vous souhaitez déposer en cliquant sur le bouton correspondant.</p>
                     <div id="contribution-type" class="btn-toolbar">
                       <div class="btn-group" role="group">
-                        <button title="Photographie, témoignage libre" type="button" class="btn btn-primary" name="temoignage" value="Témoignage ou archive personnelle">Témoignage ou archive personnelle</button>
+                        <button title="Photographie, carte postale, témoignage libre" type="button" class="btn btn-primary" name="temoignage" value="Témoignage ou archive personnelle">Témoignage ou archive personnelle</button>
                       </div>
                       <div class="btn-group" role="group">
                         <button title="Compte rendu, devis, règlement intérieur, statuts d'association, documents techniques" type="button" class="btn btn-primary" name="docadm" value="Archive institutionnelle">Archive institutionnelle</button>
@@ -227,6 +228,7 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
     $('#contribution-public').parent().hide();
     $.fn.bootstrapSwitch.defaults.onText = 'Oui';
     $.fn.bootstrapSwitch.defaults.offText = 'Non';
+    $.fn.bootstrapSwitch.defaults.indeterminate = true;
     $('#terms-agree').bootstrapSwitch();
 
     $('#terms-agree').on('switchChange.bootstrapSwitch', function(event, state) {
@@ -238,7 +240,7 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
       else {
         $('#contribution-anonymous').parent().hide();
         $('#contribution-public').parent().hide();
-        select.prop('disabled', false);
+        select.prop('disabled', true);
       }
     });
 

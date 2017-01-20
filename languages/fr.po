@@ -551,7 +551,7 @@ msgstr "Quel type de contenu souhaitez-vous ajouter ?"
 
 #: views/public/contribution/contribute.php:62
 msgid "Publish my contribution on the web."
-msgstr "Publier mes contributions sur le web."
+msgstr "Publier ma contribution sur le web."
 
 #: views/public/contribution/contribute.php:67
 msgid "Contribute anonymously."

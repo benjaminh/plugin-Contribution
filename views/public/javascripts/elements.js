@@ -154,7 +154,7 @@ Omeka.Elements = {};
             }
 
             if ($(this).attr('id') == "element-1") {
-              $(this).find('div:first-child label').text('Espace de saisie libre');
+              $(this).find('div:first-child label').text("Vous souhaitez donner plus de détails sur cet événement : utilisez l'espace ci-dessous");
               var textElem = $(this).find('label.use-html').contents().filter(function(){ return this.nodeType == 3; });
               textElem.remove();
               $(this).find('label.use-html').prepend("Activer l'éditeur avancé");
@@ -254,19 +254,16 @@ Omeka.Elements = {};
                 <label class="btn"><input type="radio" name="optDate" value="3"/>Date inconnue</label>
               </div>
               <p class="explanation-info">2. Sélectionner le format de la date "Année", "Mois/Année", "Jour/Mois/Année"</p>
-              <div class="btn-group date-format" data-toggle="buttons">
-                <span class="button-checkbox">
-                  <button type="button" class="btn" data-color="info">Année</button>
-                  <input type="checkbox" class="hidden" name="dateFormat" value='y'/>
-                </span>
-                <span class="button-checkbox">
-                  <button type="button" class="btn" data-color="info">Mois</button>
-                  <input type="checkbox" class="hidden" name="dateFormat" value='m'/>
-                </span>
-                <span class="button-checkbox">
-                  <button type="button" class="btn" data-color="info">Jour</button>
-                  <input type="checkbox" class="hidden" name="dateFormat" value='d'/>
-                </span>
+              <div class="funkyradio date-format">
+                <div class="funkyradio-info">
+                  <input id="y" type="radio" name="dateFormat" value='y'><label for="y" class="radio-inline">Année</label>
+                </div>
+                <div class="funkyradio-info">
+                  <input id="m" type="radio" name="dateFormat" value='m'><label for="m" class="radio-inline">Mois/Année</label>
+                </div>
+                <div class="funkyradio-info">
+                  <input id="d" type="radio" name="dateFormat" value='d'><label for="d" class="radio-inline">Jour/Mois/Année</label>
+                </div>
               </div>
               `;
               var dateFormat = `
@@ -286,15 +283,6 @@ Omeka.Elements = {};
                 $( "#Elements-261-0-text" ).parent().append(dateFormat);
               }
               $('input:radio[name="optDate"]').on('change', function (event) {
-                // Unpick all date format choice
-                $('.button-checkbox').each( function() {
-                  var $widget = $(this),
-                      $button = $widget.find('button'),
-                      $checkbox = $widget.find('input:checkbox');
-
-                  $checkbox.prop('checked', false);
-                  $checkbox.triggerHandler('change');
-                });
                 // Hide datepickers
                 $('#datepicker1, #datepicker2').hide();
                 var filterDate = $('input:radio[name="optDate"]:checked').val();
@@ -337,12 +325,22 @@ Omeka.Elements = {};
                 });
               });
 
-              $('input:checkbox[name="dateFormat"]').on('change', function (event) {
-                var checked = [];
-                $.each($("input[name='dateFormat']:checked"), function() {
-                    checked.push($(this).val());
-                });
-                if ( checked.includes('m') && checked.includes('d') ) {
+              $('input:radio[name="dateFormat"]').on('change', function (event) {
+
+                // Display datepickers based on event type
+                var filterDate = $('input:radio[name="optDate"]:checked').val();
+                if (filterDate == 1) {
+                  $('#datepicker2').hide();
+                  $('#datepicker1').show();
+                }
+                else if (filterDate == 2) {
+                  // From date 1 to date 2
+                  $('#datepicker2').show();
+                  $('#datepicker1').hide();
+                }
+
+                console.log($("input[name='dateFormat']:checked").val());
+                if ( $("input[name='dateFormat']:checked").val() == "d" ) {
                   $('#datepicker1 input').datepicker("clearDates");
                   $('#datepicker1 input').datepicker('setFormat', 'dd/mm/yyyy');
                   $('#datepicker1 input').datepicker('setStartDate', '01/01/1600');
@@ -354,7 +352,7 @@ Omeka.Elements = {};
                     $(this).datepicker('setMinViewMode', 0);
                   });
                 }
-                else if ( checked.includes('m') && !checked.includes('d') ) {
+                else if ( $("input[name='dateFormat']:checked").val() == "m" ) {
                   $('#datepicker1 input').datepicker("clearDates");
                   $('#datepicker1 input').datepicker('setFormat', 'mm/yyyy');
                   $('#datepicker1 input').datepicker('setMinViewMode', 1);
@@ -366,7 +364,7 @@ Omeka.Elements = {};
                     $(this).datepicker('setMinViewMode', 1);
                   });
                 }
-                else if ( !checked.includes('m') && !checked.includes('d') ) {
+                else if ( $("input[name='dateFormat']:checked").val() == "y" ) {
                   $('#datepicker1 input').datepicker("clearDates");
                   $('#datepicker1 input').datepicker('setFormat', 'yyyy');
                   $('#datepicker1 input').datepicker('setStartDate', '1600');
@@ -394,97 +392,6 @@ Omeka.Elements = {};
                   $('#Elements-261-0-text').val('Du ' + date1 + ' au ' + date2);
                 }
               });
-
-              // Checkbox behaviour
-              $('.button-checkbox').each(function () {
-                  // Settings
-                  var $widget = $(this),
-                      $button = $widget.find('button'),
-                      $checkbox = $widget.find('input:checkbox'),
-                      color = $button.data('color'),
-                      settings = {
-                          on: {
-                              icon: 'glyphicon glyphicon-check'
-                          },
-                          off: {
-                              icon: 'glyphicon glyphicon-unchecked'
-                          }
-                      };
-                  // Event Handlers
-                  $button.on('click', function () {
-                      // Display datepickers based on event type
-                      var filterDate = $('input:radio[name="optDate"]:checked').val();
-                      if (filterDate == 1) {
-                        $('#datepicker2').hide();
-                        $('#datepicker1').show();
-                      }
-                      else if (filterDate == 2) {
-                        // From date 1 to date 2
-                        $('#datepicker2').show();
-                        $('#datepicker1').hide();
-                      }
-
-
-                      $checkbox.prop('checked', !$checkbox.is(':checked'));
-                      $checkbox.triggerHandler('change');
-                      updateDisplay();
-                  });
-                  $checkbox.on('change', function () {
-                    if ($(this).val() == 'd' && $(this).is(':checked') && !$('input[value="m"]:checkbox').is(':checked') && !$('input[value="y"]:checkbox').is(':checked')) {
-                      $('input[value="m"]:checkbox').trigger('click');
-                    }
-                    else if ($(this).val() == 'd' && $(this).is(':checked') && !$('input[value="m"]:checkbox').is(':checked')) {
-                      $('input[value="m"]:checkbox').trigger('click');
-                    }
-                    else if ($(this).val() == 'm' && $(this).is(':checked') && !$('input[value="y"]:checkbox').is(':checked')) {
-                      $('input[value="y"]:checkbox').trigger('click');
-                    }
-                    else if ($(this).val() == 'm' && !$(this).is(':checked') && $('input[value="d"]:checkbox').is(':checked')) {
-                      $('input[value="d"]:checkbox').trigger('click');
-                    }
-                    else if ($(this).val() == 'y' && !$(this).is(':checked') && $('input[value="m"]:checkbox').is(':checked')) {
-                      $('input[value="m"]:checkbox').trigger('click');
-                    }
-                    updateDisplay();
-                  });
-
-                  // Actions
-                  function updateDisplay() {
-                      var isChecked = $checkbox.is(':checked');
-
-                      // Set the button's state
-                      $button.data('state', (isChecked) ? "on" : "off");
-
-                      // Set the button's icon
-                      $button.find('.state-icon')
-                          .removeClass()
-                          .addClass('state-icon ' + settings[$button.data('state')].icon);
-
-                      // Update the button's color
-                      if (isChecked) {
-                          $button
-                              .removeClass('btn-default')
-                              .addClass('btn-' + color + ' active');
-                      }
-                      else {
-                          $button
-                              .removeClass('btn-' + color + ' active')
-                              .addClass('btn-default');
-                      }
-                  }
-
-                  // Initialization
-                  function init() {
-
-                      updateDisplay();
-
-                      // Inject the icon if applicable
-                      if ($button.find('.state-icon').length == 0) {
-                          $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i> ');
-                      }
-                  }
-                  init();
-              });
             }
             else if ($(this).attr('id') == "element-200") {
               // Hide the license field. Populate it with cc Chooser
@@ -501,6 +408,9 @@ Omeka.Elements = {};
             else if ($(this).attr('id') == "element-199") {
               // Hide the Access Rights element. Populate with license chooser info
               $(this).hide();
+            }
+            else if ($(this).attr('id') == "element-41") {
+              $('#Elements-41-0-text').attr('placeholder', "Décrivez le contenu du document, à quoi se rapporte t-il ?");
             }
             else if ($(this).attr('id') == "element-260") {
               $(this).hide();
@@ -555,11 +465,13 @@ Omeka.Elements = {};
                 $('#itinerant').on('switchChange.bootstrapSwitch', function(event, state) {
                   if (state) {
                     toHide.hide();
+                    $('#mapdiv').hide();
                     itinerantStart.show();
                     itinerantArrival.show();
                   }
                   else {
                     toHide.show();
+                    $('#mapdiv').show();
                     itinerantStart.hide();
                     itinerantArrival.hide();
                   }

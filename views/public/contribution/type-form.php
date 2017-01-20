@@ -42,9 +42,17 @@ jQuery(document).bind('omeka:elementformload', function (event) {
 
   ?>
   <br/>
-  <p class="explanation-info">
-    <b>Afin de  connaitre le contexte dans lequel s’inscrivait votre séjour de vacances, merci de renseigner les champs ci-dessous.</b>
-  </p>
+  <!--<div id="expl-perso">
+    <p class="explanation-info">
+      <b>Afin de connaitre le contexte dans lequel s’inscrivait votre séjour de vacances, merci de renseigner les champs ci-dessous.</b>
+    </p>
+  </div>
+-->
+  <div id="expl-instit">
+    <p class="explanation-info">
+      <b>Afin de recueillir davantage d'informations sur votre contribution, merci de renseigner les champs ci-dessous.</b>
+    </p>
+  </div>
 
   <?php
   if ($type->isFileRequired()):
@@ -53,7 +61,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
 
   <div class="field">
       <div class="two columns alpha">
-          <?php echo $this->formLabel('contributed_file', __('Envoyer un fichier')); ?>
+          <?php echo $this->formLabel('contributed_file', __('Vous souhaitez partager un document ? Cliquez sur le bouton « Parcourir »')); ?>
       </div>
       <div class="inputs five columns omega">
           <?php echo $this->formFile('contributed_file', array('class' => 'fileinput')); ?>
@@ -96,7 +104,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
     ?>
     <div class="field">
             <div class="two columns alpha">
-                <?php echo $this->formLabel('contributed_file', __('Envoyer un fichier (Facultatif)')); ?>
+                <?php echo $this->formLabel('contributed_file', __('Vous souhaitez partager un document associé à cet événement ? Cliquez sur le bouton « Parcourir »')); ?>
             </div>
             <div class="inputs five columns omega">
                 <?php echo $this->formFile('contributed_file', array('class' => 'fileinput')); ?>
