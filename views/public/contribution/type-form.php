@@ -1,6 +1,21 @@
 <?php echo js_tag('vendor/tiny_mce/tiny_mce'); ?>
 <?php echo js_tag('elements'); ?>
 
+<script type="text/javascript" charset="utf-8">
+jQuery(window).load(function () {
+    // Must run the element form scripts AFTER reseting textarea ids.
+    jQuery(document).trigger('omeka:elementformload');
+
+    Omeka.Items.enableAddFiles(<?php echo js_escape(__('Add Another File')); ?>);
+    Omeka.Items.changeItemType(<?php echo js_escape(url("items/change-type")) ?><?php if ($id = metadata('item', 'id')) echo ', '.$id; ?>);
+});
+
+jQuery(document).bind('omeka:elementformload', function (event) {
+    Omeka.Elements.makeElementControls(event.target, <?php echo js_escape(url('elements/element-form')); ?>,'Item'<?php if ($id = metadata('item', 'id')) echo ', '.$id; ?>);
+    Omeka.Elements.enableWysiwyg(event.target);
+});
+//]]>
+</script>
 
 <div class="container-fluid">
   <!-- Bootstrap code inside container div -->
