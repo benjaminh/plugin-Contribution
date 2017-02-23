@@ -98,8 +98,8 @@ Omeka.Elements = {};
           map.invalidateSize();
           // create the tile layer with correct attribution
 
-          var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-          var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+          var osmUrl='//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+          var osmAttrib='Map data © <a href="//openstreetmap.org">OpenStreetMap</a> contributors';
           var osm = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 15, attribution: osmAttrib});
 
           // start the map in South-East England
@@ -123,8 +123,6 @@ Omeka.Elements = {};
         // Geocode function
         function geocode(address)
         {
-
-          console.log(address);
           if (typeof marker !== 'undefined')
           {
             map.removeLayer(marker);
@@ -159,6 +157,29 @@ Omeka.Elements = {};
               textElem.remove();
               $(this).find('label.use-html').prepend("Activer l'éditeur avancé");
             }
+            else if ($(this).attr('id') == "element-39") {
+              // Ask for participant's identity if different from authenticated account
+              $("#Elements-39-0-text").hide();
+              var username = $('#username').val();
+              $("#Elements-39-0-text").val(username);
+              html = `
+                <label for="identity">Je dépose en mon nom ?</label>
+                <input id="identity" name="identity" type="checkbox" data-off-active-cls="btn-primary" data-on-active-cls="btn-warning">
+              `;
+              $(this).find('div.input').prepend(html);
+              $('#identity').checkboxpicker({offLabel: 'Oui', onLabel: 'Non'});
+              $('#identity').on('change', function() {
+                if ($(this).is(':checked')) {
+                  $("#Elements-39-0-text").show();
+                  $("#Elements-39-0-text").val('');
+                  $("#Elements-39-0-text").attr("placeholder", "Indiquez l'identité de la personne pour laquelle vous déposer un témoignage.")
+                }
+                else {
+                  $("#Elements-39-0-text").hide();
+                  $("#Elements-39-0-text").val(username);
+                }
+              });
+            }
             else if ($(this).attr('id') == "element-257") {
               // Check if field already exists - seems to be called 2 times - don't know why yet FIXME
               if ($('#type-select').length === 0) {
@@ -181,6 +202,7 @@ Omeka.Elements = {};
                     <option value="org-colonie">Colonies de vacances</option>
                     <option value="org-accueil">Famille d'accueil</option>
                   </optgroup>
+                  <option value="none">Sans hébergement</option>
                 </select>
                 `;
                 $("#Elements-257-0-text").hide();
@@ -221,6 +243,7 @@ Omeka.Elements = {};
                 $(this).find('div.input').prepend(html);
                 $('#status-select').on( 'change', function(event) {
                   var selected = $("#status-select").val();
+                  console.log(selected);
                   var group = '';
                   $("#Elements-264-0-text").hide();
                   if ( selected.startsWith('org-') ) {
@@ -339,7 +362,6 @@ Omeka.Elements = {};
                   $('#datepicker1').hide();
                 }
 
-                console.log($("input[name='dateFormat']:checked").val());
                 if ( $("input[name='dateFormat']:checked").val() == "d" ) {
                   $('#datepicker1 input').datepicker("clearDates");
                   $('#datepicker1 input').datepicker('setFormat', 'dd/mm/yyyy');
@@ -409,13 +431,14 @@ Omeka.Elements = {};
               // Hide the Access Rights element. Populate with license chooser info
               $(this).hide();
             }
+            else if ($(this).attr('id') == "element-252") {
+              $('#Elements-252-0-text').attr('placeholder', 'Exemple : Camping "Les flots bleus"');
+            }
+            else if ($(this).attr('id') == "element-253") {
+              $('#Elements-253-0-text').attr('placeholder', 'Exemple : Association des enfants heureux');
+            }
             else if ($(this).attr('id') == "element-41") {
               $('#Elements-41-0-text').attr('placeholder', "Décrivez le contenu du document, à quoi se rapporte t-il ?");
-            }
-            else if ($(this).attr('id') == "element-260") {
-              $(this).hide();
-              var selected_doc_type = $('#contribution-type button.active');
-              $('#Elements-260-0-text').val(selected_doc_type.attr("value"));
             }
             else if ($(this).attr('id') == "element-262") {
 
@@ -427,7 +450,9 @@ Omeka.Elements = {};
                   <option value="cm">Cours Moyen (9-11 ans)</option>
                   <option value="college">Collège (11-15 ans)</option>
                   <option value="lycee">Lycée (15-18 ans)</option>
-                  <option value="18">>18 ans</option>
+                  <option value="18-25">18-25 ans</option>
+                  <option value="25-30">25-30 ans</option>
+                  <option value="30-35">30-35 ans</option>
                   <option value="idk">Ne sais pas</option>
                 </select>
                 `;
@@ -436,18 +461,28 @@ Omeka.Elements = {};
                 $('#age-select').on('change', function(event) {
                   setTimeout( function () {
                     var selected = $('button[data-id="age-select"]').attr('title');
-                    console.log(selected);
                     $('#Elements-262-0-text').val(selected);
                   }, 10);
                 });
                 $('#age-select').attr("multiple", "multiple");
               }
             }
+            else if ($(this).attr('id') == "element-273" || $(this).attr('id') == "element-274" ) {
+
+              var selectID = $(this).attr('id').replace("element-", "");
+              var elementToSelect = '#Elements-' + selectID + '-0-text';
+              $(elementToSelect).attr("multiple", "multiple");
+            }
             else if ($(this).attr('id') == "element-50") {
               // Hide the Access Rights element. Populate with license chooser info
               $(this).hide();
               var titre = $('#Elements-260-0-text').val();
               $('#Elements-50-0-text').val(titre);
+            }
+            else if ($(this).attr('id') == "element-260") {
+              $(this).hide();
+              var selected_doc_type = $('#contribution-type button.active');
+              $('#Elements-260-0-text').val(selected_doc_type.attr("value"));
             }
             else if ( $(this).attr('id') == "element-266") {
               // Touring stay or not
@@ -457,13 +492,12 @@ Omeka.Elements = {};
               if ( !$('#itinerant').length ) {
                 html = `
                   <label for="itinerant">Était-ce un séjour itinérant ?</label>
-                  <input name="itinerant" value="0" type="hidden">
-                  <input id="itinerant" name="itinerant" value="1" style="display: none;" type="checkbox">
+                  <input id="itinerant" name="itinerant" type="checkbox"data-off-active-cls="btn-warning" data-on-active-cls="btn-primary">
                 `;
                 $(this).children(":last").prepend(html);
-                $('#itinerant').bootstrapSwitch();
-                $('#itinerant').on('switchChange.bootstrapSwitch', function(event, state) {
-                  if (state) {
+                $('#itinerant').checkboxpicker({offLabel: 'Non', onLabel: 'Oui'});
+                $('#itinerant').on('change', function() {
+                  if ($(this).is(':checked')) {
                     toHide.hide();
                     $('#mapdiv').hide();
                     itinerantStart.show();
@@ -480,6 +514,12 @@ Omeka.Elements = {};
             }
             else if ( ($(this).attr('id') == "element-267") || ($(this).attr('id') == "element-268") || ($(this).attr('id') == "element-269") || ($(this).attr('id') == "element-270") ) {
               $(this).hide();
+            }
+            else if ( ($(this).attr('id') == "element-226") ) {
+              $('#Elements-226-0-text').attr("placeholder", "Exemples : Ouest France, Archives départementales…")
+            }
+            else if ( ($(this).attr('id') == "element-275") ) {
+              $('#Elements-275-0-text').attr("placeholder", "Exemples : Conseil général du Maine et Loire, Centre d'échanges 'Colo pour tous', etc.")
             }
             // Add form-control class for bootstrap
             // NOTE Had to be done with jQuery because Omeka creates only input elements and no "button" : check FormSubmit.php in Zend/View/Helper

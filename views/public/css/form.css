@@ -20,6 +20,10 @@ h2.contribution-userprofile  {
 p#contribution-userprofile-visibility {
 	margin: 2px;
 }
+p.important-text {
+	font-size: 1.1em;
+	font-weight: bold;
+}
 
 div.contribution-userprofile.exists {
 	display: none;

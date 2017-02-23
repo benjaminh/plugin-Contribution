@@ -21,6 +21,8 @@ jQuery(document).bind('omeka:elementformload', function (event) {
   <!-- Bootstrap code inside container div -->
 
   <?php
+
+ /*
   if (!$type) {
     echo '<p>';
     echo __('Vous devez choisir un type de contenu pour continuer.');
@@ -38,7 +40,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
     echo __('Déposer un %s', $type->display_name, 'en remplissant le formulaire ci-dessous');
     echo '</h4>';
     }
-    */
+  */
     $allowMultipleFiles = $type->multiple_files;
   ?>
   <br/>
@@ -51,6 +53,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
   <div id="expl-instit">
     <p class="explanation-info">
       <b>Afin de recueillir davantage d'informations sur votre contribution, merci de renseigner les champs ci-dessous.</b>
+      <p><em>Si vous ne comprenez pas un intitulé ou si vous n'avez pas l'information, laissez le champ vide.</em></p>
     </p>
   </div>
 
@@ -91,7 +94,8 @@ jQuery(document).bind('omeka:elementformload', function (event) {
   </div>
 
     <?php
-    if (!isset($required) && $type->isFileAllowed()):
+    // NOTE commented next line because I only have cases where I want to allow file upload
+    // if (!isset($required) && $type->isFileAllowed()):
     ?>
 
     <div id="files-form" class="field drawer-contents">
@@ -118,7 +122,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
           <?php endif; ?>
       </script>
       <?php endif; ?>
-    <?php endif; ?>
+    <?php //endif; ?>
 
 
     <?php if ($type->add_tags) : ?>
@@ -127,13 +131,14 @@ jQuery(document).bind('omeka:elementformload', function (event) {
             <?php echo $this->formLabel('tags', __('Add Tags')); ?>
         </div>
         <div class="inputs five columns omega">
-            <p id="add-tags-explanation" class="explanation"><?php echo __('Separate tags with %s', option('tag_delimiter')); ?></p>
+            <p id="add-tags-explanation" class="explanation-info"><?php echo __('Séparer les mots-clés avec une virgule " %s "', option('tag_delimiter')); ?></p>
             <?php echo $this->formText('tags', isset($tags) ? $tags : ''); ?>
         </div>
     </div>
     <?php endif; ?>
 
     <?php $user = current_user(); ?>
+    <input type="hidden" id="username" value="<?php echo metadata($user, 'name'); ?>"/>
     <?php if(get_option('contribution_simple') && !$user) : ?>
     <div class="field">
         <div class="two columns alpha">
@@ -191,7 +196,7 @@ jQuery(document).bind('omeka:elementformload', function (event) {
   // on a type-by-type basis).
   fire_plugin_hook('contribution_type_form', array('type'=>$type, 'view'=>$this));
   ?>
-  <?php } ?>
+  <?php //} ?>
 </div>
 <!-- End of bootstrap container
 <

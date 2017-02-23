@@ -21,6 +21,7 @@ queue_js_file('bootstrap-datepicker');
 queue_js_file('locales/bootstrap-datepicker.fr.min');
 queue_js_file('bootstrap-switch.min');
 queue_css_file('bootstrap-switch.min');
+queue_js_file('bootstrap-checkbox.min');
 
 //load jeoquery library
 queue_js_file('jeoquery');
@@ -47,10 +48,10 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
 </script>
 
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
 
 <div id="primary">
 <?php echo flash(); ?>
@@ -63,26 +64,21 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
         <?php $session = new Zend_Session_Namespace;
               $session->redirect = absolute_url();
         ?>
-        <p>Pour contribuer au projet, vous devez <a href='<?php echo url('guest-user/user/register'); ?>'>créer un compte</a> ou <a href='<?php echo url('guest-user/user/login'); ?>'>vous identifier</a>.</p>
+        <h4>Un projet utile à tous et concret.</h4>
+        <p>Pourquoi pas vous ? Chacun peut apporter son témoignage.</p>
+
+
+        <p>Cette plateforme permet la collecte de documents (programmes, plaquettes, flyers, photos…) et d'écrits (témoignages, compte-rendus…) afin de mieux connaître les pratiques des enfants et des jeunes pendant leurs vacances.
+          Vos contributions permettront de comprendre l'influence des mobilités de loisir sur les territoires.
+          Votre participation est essentielle pour accompagner tous les acteurs dans leur politique d’aménagement.</p>
+        <p class="important-text">Pour contribuer au projet, vous devez <a href='<?php echo url('guest-user/user/register'); ?>'>créer un compte</a> ou <a href='<?php echo url('guest-user/user/login'); ?>'>vous identifier</a>.</p>
         <p>Cette création de compte ne vous prendra que quelques secondes. Une fois qu'un administrateur aura validé votre compte, vous pourrez déposer votre document.</p>
 
-        <img src="<?php echo img('schema_contributions_portail.png'); ?>" style="width: 100%;"/>
-
-        <h4>Qui peut déposer ?</h4>
-        <p>Tout le monde, que vous soyez un particulier, un chercheur ou que vous représentiez une institution ou une entreprise.</p>
-        <h4>Qui aura accès à mon document ?</h4>
-        <p>Lors du remplissage du formulaire de contribution, vous choisissez les conditions d'accès à votre document (accès public sous licence Creative Commons, accès restreint, accès privé)</p>
-        <h4>À quoi ça sert ?</h4>
-        <p>Cette collecte de documents permettra de mieux connaître les pratiques vacancières des enfants et des jeunes et de comprendre la manière dont le développement des
-    mobilités de loisir a influencé la structuration des territoires, notamment l’évolution des zones touristiques. Cette expertise est cruciale pour accompagner les
-    territoires dans leur politique d’aménagement.</p>
+        <img src="<?php echo img('schema-portail.jpg'); ?>" style="width: 100%;"/>
 
     <?php else: ?>
-      <h4>À quoi ça sert ?</h4>
-      <p>Cette collecte de documents permettra de mieux connaître les pratiques vacancières des enfants et des jeunes et de comprendre la manière dont le développement des
-  mobilités de loisir a influencé la structuration des territoires, notamment l’évolution des zones touristiques. Cette expertise est cruciale pour accompagner les
-  territoires dans leur politique d’aménagement.</p>
-      <p>Si vous avez des difficultés à nous transmettre vos documents, n’hésitez pas à nous contacter : contact[AT]enfance-jeunesse.fr.</p>
+      <p class="important-text">Si vous avez des difficultés à nous transmettre vos documents, n’hésitez pas à nous contacter : <a href="mailto:contact@enfance-jeunesse.fr">contact@enfance-jeunesse.fr</a></p>
+      <p><em>Rappel: ceci est un projet de recherche exploratoire, il se peut que vous rencontriez quelques bugs qui n'auraient pas été identifiés malgré notre vigilance, n'hésitez pas à nous les signaler (copie d'écran par exemple) via l'adresse mail ci-dessus. Merci de votre compréhension</em></p>
 
         <form method="post" action="" enctype="multipart/form-data" class='bootstrap-iso'>
             <fieldset id="contribution-item-metadata">
@@ -98,7 +94,7 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
                         <button title="Photographie, carte postale, témoignage libre" type="button" class="btn btn-primary" name="temoignage" value="Témoignage ou archive personnelle">Témoignage ou archive personnelle</button>
                       </div>
                       <div class="btn-group" role="group">
-                        <button title="Compte rendu, devis, règlement intérieur, statuts d'association, documents techniques" type="button" class="btn btn-primary" name="docadm" value="Archive institutionnelle">Archive institutionnelle</button>
+                        <button title="Compte rendu, devis, règlement intérieur, statuts d'association, documents techniques, articles de presse, plaquettes, flyers…" type="button" class="btn btn-primary" name="docadm" value="Archive institutionnelle ou promotionnelle">Archive institutionnelle</button>
                       </div>
                     </div>
                       <!-- <label for="contribution-type"><?php //echo __("What type of item do you want to contribute?"); ?></label> -->
@@ -123,7 +119,7 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
                 <?php if(isset($captchaScript)): ?>
                     <div id="captcha" class="inputs"><?php echo $captchaScript; ?></div>
                 <?php endif; ?>
-                <p><?php echo __("In order to contribute, you must read and agree to the %s",  "<a href='" . contribution_contribute_url('terms') . "' target='_blank'>" . __('Terms and Conditions') . ".</a>"); ?></p>
+                <p><b><?php echo __("In order to contribute, you must read and agree to the %s",  "<a href='" . contribution_contribute_url('terms') . "' target='_blank'>" . __('Terms and Conditions') . ".</a>"); ?><b></p>
                 <div class="inputs">
                     <?php $agree = isset( $_POST['terms-agree']) ?  $_POST['terms-agree'] : 0 ?>
                     <?php echo $this->formLabel('terms-agree', __('I agree to the Terms and Conditions.')); ?>
@@ -226,16 +222,14 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
     });
 
     // Modify "I agree with" checkbox with Yes/No
-    $('#terms-agree').hide();
     $('#contribution-anonymous').parent().hide();
     $('#contribution-public').parent().hide();
     $.fn.bootstrapSwitch.defaults.onText = 'Oui';
     $.fn.bootstrapSwitch.defaults.offText = 'Non';
     $.fn.bootstrapSwitch.defaults.indeterminate = true;
-    $('#terms-agree').bootstrapSwitch();
-
-    $('#terms-agree').on('switchChange.bootstrapSwitch', function(event, state) {
-      if (state) {
+    $('#terms-agree').checkboxpicker({offLabel: 'Non', onLabel: 'Oui'});
+    $('#terms-agree').on('change', function() {
+      if ($(this).is(':checked')) {
         $('#contribution-anonymous').parent().show();
         $('#contribution-public').parent().show();
         select.prop('disabled', false);
@@ -251,4 +245,4 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
 </script>
 
 <!-- TEST-->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqWOqcV2uYiGSS4xH2WDwjP7zPMYA4DUQ&signed_in=true&libraries=places" async defer></script>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyDqWOqcV2uYiGSS4xH2WDwjP7zPMYA4DUQ&signed_in=true&libraries=places" async defer></script>

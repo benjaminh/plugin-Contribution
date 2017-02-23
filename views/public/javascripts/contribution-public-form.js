@@ -112,6 +112,7 @@ function enableContributionAjaxForm(url) {
         contributionType.on("click", function () {
             var name = this.name;
             contributionType.removeClass("active");
+            contributionType.addClass("disabled");
             jQuery(this).addClass("active");
             if (name == "temoignage") {
               value = 3;
