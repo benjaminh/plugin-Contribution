@@ -184,6 +184,11 @@ enableContributionAjaxForm(<?php echo js_escape(url($contributionPath.'/type-for
     $('#cc_js_license_selected').hide();
     $('input[name="cc_js_want_cc_license"]').on("change", function() { licensesToggle(); } );
     function licensesToggle() {
+      // RAZ
+      $("#Elements-200-0-text").val('');
+      $("#Elements-199-0-text").val('');
+
+      // Toggle visibility
       var ccRadioChecked = $('input[name="cc_js_want_cc_license"]:checked');
       if( ccRadioChecked.length == 0 ) {
          // None is selected

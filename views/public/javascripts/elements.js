@@ -270,13 +270,13 @@ Omeka.Elements = {};
               // Save answer in hidden field
               $( "#Elements-261-0-text" ).hide();
               var radioButtons = `
-              <p class="explanation-info">1. Sélectionner le type d'événément</p>
+              <p class="explanation-info">1. Sélectionner le type d'événément puis passer à l'étape 2.</p>
               <div class="btn-group">
                 <label class="btn"><input checked type="radio" name="optDate" value="1"/>Événément sur une journée</label>
                 <label class="btn"><input type="radio" name="optDate" value="2"/>Événement sur plusieurs jours</label>
                 <label class="btn"><input type="radio" name="optDate" value="3"/>Date inconnue</label>
               </div>
-              <p class="explanation-info">2. Sélectionner le format de la date "Année", "Mois/Année", "Jour/Mois/Année"</p>
+              <p class="explanation-info">2. Sélectionner le format de la date "Année", "Mois/Année", "Jour/Mois/Année" puis passer à l'étape 3.</p>
               <div class="funkyradio date-format">
                 <div class="funkyradio-info">
                   <input id="y" type="radio" name="dateFormat" value='y'><label for="y" class="radio-inline">Année</label>
@@ -409,7 +409,7 @@ Omeka.Elements = {};
                 }
                 else if (filterDate == 2) {
                   // From date 1 to date 2
-                  var date1 = $('#datepicker2 input:first-child').val();
+                  var date1 = $('#datepicker2 input:first').val();
                   var date2 = $('#datepicker2 input:last-child').val();
                   $('#Elements-261-0-text').val('Du ' + date1 + ' au ' + date2);
                 }
@@ -516,10 +516,10 @@ Omeka.Elements = {};
               $(this).hide();
             }
             else if ( ($(this).attr('id') == "element-226") ) {
-              $('#Elements-226-0-text').attr("placeholder", "Exemples : Ouest France, Archives départementales…")
+              $('#Elements-226-0-text').attr("placeholder", "Exemples : Ouest France, Archives départementales…");
             }
             else if ( ($(this).attr('id') == "element-275") ) {
-              $('#Elements-275-0-text').attr("placeholder", "Exemples : Conseil général du Maine et Loire, Centre d'échanges 'Colo pour tous', etc.")
+              $('#Elements-275-0-text').attr("placeholder", "Exemples : Mairie de XXXX, Centre d'échanges 'Colo pour tous', etc.");
             }
             // Add form-control class for bootstrap
             // NOTE Had to be done with jQuery because Omeka creates only input elements and no "button" : check FormSubmit.php in Zend/View/Helper
